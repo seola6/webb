@@ -69,4 +69,4 @@ for i, title in enumerate(ranking_data[day], start=1):
     else:
         st.write(f"🏅 {i}위 - {title}")
 
-st.info("📌 얼른 보새요.")
+st.info("📌 얼른 보세요!!!")
