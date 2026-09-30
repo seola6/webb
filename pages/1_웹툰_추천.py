@@ -3,18 +3,6 @@ import random
 
 st.title("🎯 웹툰 추천")
 
-genre = st.selectbox(
-    "장르 선택",
-    list(webtoon_data.keys())
-)
-mood = st.selectbox(
-    "분위기 선택",
-    ["힐링", "성장", "피폐", "개그"]
-)
-
-if st.button("추천 받기"):
-
-    # 여기에 데이터 추가
 webtoon_data = {
     "판타지": [
         {
@@ -155,13 +143,18 @@ webtoon_data = {
     ]
 }
 
-    result = webtoon_data.get(genre, [])
+genre = st.selectbox(
+    "장르 선택",
+    list(webtoon_data.keys())
+)
 
-    if result:
-        webtoon = random.choice(result)
+mood = st.selectbox(
+    "분위기 선택",
+    ["힐링", "성장", "피폐", "개그"]
+)
 
-        st.success(webtoon["title"])
-        st.write(webtoon["description"])
+if st.button("추천 받기"):
+    webtoon = random.choice(webtoon_data[genre])
 
-    else:
-        st.warning("데이터를 추가해주세요.")
+    st.success(f"📚 추천 웹툰: {webtoon['title']}")
+    st.write(webtoon["description"])
