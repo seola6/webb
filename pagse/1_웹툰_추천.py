@@ -5,9 +5,8 @@ st.title("🎯 웹툰 추천")
 
 genre = st.selectbox(
     "장르 선택",
-    ["판타지", "로맨스", "액션", "드라마", "스릴러"]
+    list(webtoon_data.keys())
 )
-
 mood = st.selectbox(
     "분위기 선택",
     ["힐링", "성장", "피폐", "개그"]
