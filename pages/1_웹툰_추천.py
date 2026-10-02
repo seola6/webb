@@ -158,3 +158,21 @@ if st.button("추천 받기"):
 
     st.success(f"📚 추천 웹툰: {webtoon['title']}")
     st.write(webtoon["description"])
+
+    if genre == "판타지":
+        st.image("별빛 아래 떠 있는 환상의 성채.png")
+
+    elif genre == "로맨스":
+        st.image("벚꽃빛 강변의 황혼.png")
+
+    elif genre == "액션":
+        st.image("붉은 달 아래의 종말 전투.png")
+
+    elif genre == "스릴러":
+        st.image("달빛 아래 유령도시의 성명 폐허.png")
+
+    elif genre == "BL":
+        st.image("녹빛 폐허 속의 은밀한 입맞춤.png")
+
+    elif genre == "드라마":
+        st.image("황금빛 노을의 꽃 테라스와 환상도시.png")
