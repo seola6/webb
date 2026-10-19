@@ -1,6 +1,7 @@
+
 import time
-import streamlit as st
 import random
+import streamlit as st
 
 st.set_page_config(
     page_title="WEBTOON ROULETTE",
@@ -49,8 +50,9 @@ st.markdown("""
 @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Nanum+Gothic+Coding:wght@400;700&display=swap');
 
 .stApp {
-    background:
-        radial-gradient(ellipse at top, #30204a 0%, #11101b 48%, #08090e 100%);
+    background: radial-gradient(
+        ellipse at top, #30204a 0%, #11101b 48%, #08090e 100%
+    );
     color: #f8f0dc;
 }
 
@@ -87,6 +89,148 @@ h1, h2, h3 {
     letter-spacing: 2px;
 }
 
+.roulette-screen {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #25152f, #111827);
+    border: 3px solid #ff4fd8;
+    border-radius: 12px;
+    padding: 38px 12px;
+    text-align: center;
+    box-shadow: 0 0 22px #ff4fd855;
+    margin: 18px 0;
+}
+
+.roulette-status {
+    color: #9efaff;
+    font-family: 'Nanum Gothic Coding', monospace;
+    font-size: 12px;
+    letter-spacing: 3px;
+    line-height: 1.8;
+}
+
+.roulette-name {
+    position: relative;
+    z-index: 2;
+    color: #fff0fb;
+    font-size: clamp(25px, 5vw, 40px);
+    font-weight: bold;
+    margin: 24px 0;
+    overflow-wrap: anywhere;
+    text-shadow: 0 0 14px #ff4fd8;
+}
+
+.roulette-deco {
+    color: #ffcf5c;
+    font-size: 25px;
+    letter-spacing: 8px;
+}
+
+/* 당첨 화면 팡! */
+.jackpot-screen {
+    animation: jackpot-pop 0.65s cubic-bezier(.18,.89,.32,1.35) both;
+    border-color: #ffe17a;
+    box-shadow:
+        0 0 15px #ff4fd8,
+        0 0 35px #ffcf5c,
+        inset 0 0 30px #ff4fd833;
+}
+
+.jackpot-screen .roulette-name {
+    animation: title-glow 1s ease-in-out infinite alternate;
+}
+
+/* 중앙에서 퍼지는 빛 */
+.burst-light {
+    position: absolute;
+    left: 50%;
+    top: 48%;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #fff8c9;
+    box-shadow:
+        0 0 18px 8px #ff4fd8,
+        0 0 35px 15px #9efaff;
+    pointer-events: none;
+    animation: light-burst 0.8s ease-out forwards;
+}
+
+/* 터지는 색종이 */
+.confetti {
+    position: absolute;
+    left: 50%;
+    top: 48%;
+    width: 9px;
+    height: 15px;
+    border-radius: 2px;
+    pointer-events: none;
+    animation: confetti-burst 1s ease-out forwards;
+}
+
+.confetti:nth-child(2) { --x: -130px; --y: -85px; background: #9efaff; }
+.confetti:nth-child(3) { --x: 125px; --y: -90px; background: #ffcf5c; }
+.confetti:nth-child(4) { --x: -155px; --y: 20px; background: #b9ff9e; }
+.confetti:nth-child(5) { --x: 150px; --y: 25px; background: #ff70df; }
+.confetti:nth-child(6) { --x: -85px; --y: 100px; background: #ffcf5c; }
+.confetti:nth-child(7) { --x: 90px; --y: 100px; background: #9efaff; }
+.confetti:nth-child(8) { --x: 0px; --y: -125px; background: #ffffff; }
+.confetti:nth-child(9) { --x: 0px; --y: 120px; background: #ff70df; }
+
+@keyframes jackpot-pop {
+    0% {
+        transform: scale(0.55);
+        opacity: 0;
+    }
+    65% {
+        transform: scale(1.07);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes light-burst {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 1;
+    }
+    45% {
+        transform: translate(-50%, -50%) scale(5);
+        opacity: .8;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(9);
+        opacity: 0;
+    }
+}
+
+@keyframes confetti-burst {
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg) scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(
+            calc(-50% + var(--x)),
+            calc(-50% + var(--y))
+        ) rotate(540deg) scale(1);
+        opacity: 0;
+    }
+}
+
+@keyframes title-glow {
+    from {
+        text-shadow: 0 0 8px #ff4fd8;
+    }
+    to {
+        text-shadow: 0 0 24px #ff4fd8, 0 0 38px #9efaff;
+    }
+}
+
+/* 결과 티켓 */
 .ticket {
     background: #f4e7c8;
     color: #251b2c;
@@ -152,15 +296,15 @@ div[data-testid="stMarkdownContainer"] p {
 # ── 헤더 ──
 st.markdown("""
 <div class="roulette-banner">
-    <div class="roulette-subtitle">★ WEBTOON ARCHIVE · SPECIAL MACHINE ★</div>
+    <div class="roulette-subtitle">
+        ★ WEBTOON ARCHIVE · SPECIAL MACHINE ★
+    </div>
     <div class="roulette-title">🎰 WEBTOON ROULETTE</div>
     <div class="roulette-subtitle">오늘 당신이 읽게 될 작품은?</div>
 </div>
 """, unsafe_allow_html=True)
 
-st.markdown(
-    "##### ▣ 오늘의 운명을 뽑아 보세요."
-)
+st.markdown("##### ▣ 오늘의 운명을 뽑아 보세요.")
 
 st.write(
     "무엇을 읽을지 고민될 때 사용하는 웹툰 추첨기입니다. "
@@ -173,88 +317,47 @@ genre = st.selectbox(
     list(webtoon_data.keys())
 )
 
-st.markdown("---")
-
-# 세션 상태 초기화
+# ── 세션 상태 초기화 ──
 if "roulette_result" not in st.session_state:
     st.session_state.roulette_result = None
 
 if "roulette_previous" not in st.session_state:
     st.session_state.roulette_previous = None
 
-
-# ── 룰렛 모션 ──
-st.markdown("""
-<style>
-.roulette-screen {
-    background: linear-gradient(135deg, #25152f, #111827);
-    border: 3px solid #ff4fd8;
-    border-radius: 12px;
-    padding: 32px 12px;
-    text-align: center;
-    box-shadow: 0 0 22px #ff4fd855;
-    margin: 18px 0;
-}
-
-.roulette-status {
-    color: #9efaff;
-    font-size: 12px;
-    letter-spacing: 4px;
-}
-
-.roulette-name {
-    color: #fff0fb;
-    font-size: clamp(25px, 5vw, 40px);
-    font-weight: bold;
-    margin: 24px 0;
-    overflow-wrap: anywhere;
-    text-shadow: 0 0 14px #ff4fd8;
-}
-
-.roulette-deco {
-    color: #ffcf5c;
-    font-size: 25px;
-    letter-spacing: 8px;
-}
-</style>
-""", unsafe_allow_html=True)
-
-if "roulette_result" not in st.session_state:
-    st.session_state.roulette_result = None
-
-if "roulette_previous" not in st.session_state:
-    st.session_state.roulette_previous = None
-
-# 장르가 바뀌면 이전 결과를 지워서 혼동 방지
 if "roulette_genre" not in st.session_state:
     st.session_state.roulette_genre = genre
 
+# 장르 변경 시 결과 초기화
 if st.session_state.roulette_genre != genre:
     st.session_state.roulette_result = None
     st.session_state.roulette_previous = None
     st.session_state.roulette_genre = genre
 
-# 화면을 갱신할 공간
+st.markdown("---")
+
+# ── 룰렛 화면 ──
 roulette_display = st.empty()
 status_display = st.empty()
 
 if st.button("🎰  룰렛 돌리기!", use_container_width=True):
-    candidates = webtoon_data[genre].copy()
 
+    candidates = webtoon_data[genre].copy()
     previous = st.session_state.roulette_previous
+
+    # 직전 당첨작은 가능한 한 제외
     if previous in candidates and len(candidates) > 1:
         candidates.remove(previous)
 
-    # 먼저 최종 당첨작을 정해 둠
+    # 최종 당첨작 결정
     result = random.choice(candidates)
 
-    # 마지막에 표시할 결과를 제외한 회전 후보
+    # 회전 중 보여 줄 제목
     others = [
         title for title in webtoon_data[genre]
         if title != result
     ]
 
-    # 빠르게 시작해서 점점 느려지는 모션
+    # READY 화면
     roulette_display.markdown("""
     <div class="roulette-screen">
         <div class="roulette-status">★ ARCHIVE MACHINE ★</div>
@@ -266,7 +369,7 @@ if st.button("🎰  룰렛 돌리기!", use_container_width=True):
 
     time.sleep(0.25)
 
-    # 반복할수록 대기 시간이 길어짐
+    # 처음엔 빠르게, 나중엔 느리게
     delays = [
         0.06, 0.07, 0.08, 0.09, 0.10,
         0.12, 0.14, 0.17, 0.20, 0.24,
@@ -287,20 +390,33 @@ if st.button("🎰  룰렛 돌리기!", use_container_width=True):
 
         time.sleep(delay)
 
-    # 최종 결과 표시
+    # 당첨 결과 저장
     st.session_state.roulette_result = result
     st.session_state.roulette_previous = result
 
+    # 당첨 순간 폭발 애니메이션
     roulette_display.markdown(f"""
-    <div class="roulette-screen">
+    <div class="roulette-screen jackpot-screen">
+        <div class="burst-light"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+
         <div class="roulette-status">★ JACKPOT ★</div>
         <div class="roulette-deco">✦ ✨ ✦</div>
         <div class="roulette-name">「 {result} 」</div>
-        <div class="roulette-status">YOUR NEXT WEBTOON HAS BEEN SELECTED</div>
+        <div class="roulette-status">
+            YOUR NEXT WEBTOON HAS BEEN SELECTED!
+        </div>
     </div>
     """, unsafe_allow_html=True)
 
-    status_display.success("🎉 당첨! 오늘의 웹툰이 결정됐어!")
+    status_display.success("🎉 팡! 당첨! 오늘의 웹툰이 결정됐어!")
 
 elif st.session_state.roulette_result:
     result = st.session_state.roulette_result
@@ -324,7 +440,6 @@ else:
     </div>
     """, unsafe_allow_html=True)
 
-
 # ── 결과 티켓 ──
 if st.session_state.roulette_result:
     result = st.session_state.roulette_result
@@ -339,7 +454,10 @@ if st.session_state.roulette_result:
     </div>
     """, unsafe_allow_html=True)
 
-    st.success("오늘의 작품이 선정되었습니다! 마음에 들지 않으면 한 번 더 돌려 보세요.")
+    st.success(
+        "오늘의 작품이 선정되었습니다! "
+        "마음에 들지 않으면 한 번 더 돌려 보세요."
+    )
 
 else:
     st.markdown("""
@@ -353,6 +471,7 @@ else:
     """, unsafe_allow_html=True)
 
 st.markdown("---")
+
 st.caption(
     "WEBTOON ARCHIVE © · 작품 목록은 예시 데이터이며, "
     "실시간 인기 순위나 플랫폼 공식 목록이 아닙니다."
