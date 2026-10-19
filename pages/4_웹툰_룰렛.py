@@ -182,23 +182,148 @@ if "roulette_result" not in st.session_state:
 if "roulette_previous" not in st.session_state:
     st.session_state.roulette_previous = None
 
-# ── 룰렛 버튼 ──
-left, center, right = st.columns([1, 2, 1])
 
-with center:
-    spin = st.button("🎰  룰렛 돌리기!", use_container_width=True)
+# ── 룰렛 모션 ──
+st.markdown("""
+<style>
+.roulette-screen {
+    background: linear-gradient(135deg, #25152f, #111827);
+    border: 3px solid #ff4fd8;
+    border-radius: 12px;
+    padding: 32px 12px;
+    text-align: center;
+    box-shadow: 0 0 22px #ff4fd855;
+    margin: 18px 0;
+}
 
-if spin:
+.roulette-status {
+    color: #9efaff;
+    font-size: 12px;
+    letter-spacing: 4px;
+}
+
+.roulette-name {
+    color: #fff0fb;
+    font-size: clamp(25px, 5vw, 40px);
+    font-weight: bold;
+    margin: 24px 0;
+    overflow-wrap: anywhere;
+    text-shadow: 0 0 14px #ff4fd8;
+}
+
+.roulette-deco {
+    color: #ffcf5c;
+    font-size: 25px;
+    letter-spacing: 8px;
+}
+</style>
+""", unsafe_allow_html=True)
+
+if "roulette_result" not in st.session_state:
+    st.session_state.roulette_result = None
+
+if "roulette_previous" not in st.session_state:
+    st.session_state.roulette_previous = None
+
+# 장르가 바뀌면 이전 결과를 지워서 혼동 방지
+if "roulette_genre" not in st.session_state:
+    st.session_state.roulette_genre = genre
+
+if st.session_state.roulette_genre != genre:
+    st.session_state.roulette_result = None
+    st.session_state.roulette_previous = None
+    st.session_state.roulette_genre = genre
+
+# 화면을 갱신할 공간
+roulette_display = st.empty()
+status_display = st.empty()
+
+if st.button("🎰  룰렛 돌리기!", use_container_width=True):
     candidates = webtoon_data[genre].copy()
 
-    # 같은 장르에서 다시 돌릴 때 직전 결과가 있으면 가능하면 다른 작품 선택
     previous = st.session_state.roulette_previous
     if previous in candidates and len(candidates) > 1:
         candidates.remove(previous)
 
+    # 먼저 최종 당첨작을 정해 둠
     result = random.choice(candidates)
+
+    # 마지막에 표시할 결과를 제외한 회전 후보
+    others = [
+        title for title in webtoon_data[genre]
+        if title != result
+    ]
+
+    # 빠르게 시작해서 점점 느려지는 모션
+    roulette_display.markdown("""
+    <div class="roulette-screen">
+        <div class="roulette-status">★ ARCHIVE MACHINE ★</div>
+        <div class="roulette-deco">✦ ✧ ✦</div>
+        <div class="roulette-name">READY...</div>
+        <div class="roulette-status">DRAWING YOUR NEXT STORY</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    time.sleep(0.25)
+
+    # 반복할수록 대기 시간이 길어짐
+    delays = [
+        0.06, 0.07, 0.08, 0.09, 0.10,
+        0.12, 0.14, 0.17, 0.20, 0.24,
+        0.29, 0.35, 0.42, 0.50
+    ]
+
+    for delay in delays:
+        title = random.choice(others) if others else result
+
+        roulette_display.markdown(f"""
+        <div class="roulette-screen">
+            <div class="roulette-status">★ SPINNING ★</div>
+            <div class="roulette-deco">✦ ✧ ✦</div>
+            <div class="roulette-name">「 {title} 」</div>
+            <div class="roulette-status">SEARCHING THE ARCHIVE...</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        time.sleep(delay)
+
+    # 최종 결과 표시
     st.session_state.roulette_result = result
     st.session_state.roulette_previous = result
+
+    roulette_display.markdown(f"""
+    <div class="roulette-screen">
+        <div class="roulette-status">★ JACKPOT ★</div>
+        <div class="roulette-deco">✦ ✨ ✦</div>
+        <div class="roulette-name">「 {result} 」</div>
+        <div class="roulette-status">YOUR NEXT WEBTOON HAS BEEN SELECTED</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    status_display.success("🎉 당첨! 오늘의 웹툰이 결정됐어!")
+
+elif st.session_state.roulette_result:
+    result = st.session_state.roulette_result
+
+    roulette_display.markdown(f"""
+    <div class="roulette-screen">
+        <div class="roulette-status">★ YOUR NEXT WEBTOON ★</div>
+        <div class="roulette-deco">✦ ✨ ✦</div>
+        <div class="roulette-name">「 {result} 」</div>
+        <div class="roulette-status">장르: {genre}</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+else:
+    roulette_display.markdown("""
+    <div class="roulette-screen">
+        <div class="roulette-status">★ READY ★</div>
+        <div class="roulette-deco">✦ ✧ ✦</div>
+        <div class="roulette-name">운명의 버튼을 누르세요!</div>
+        <div class="roulette-status">YOUR NEXT STORY IS WAITING</div>
+    </div>
+    """, unsafe_allow_html=True)
+
 
 # ── 결과 티켓 ──
 if st.session_state.roulette_result:
