@@ -161,7 +161,7 @@ webtoon_data = {
         {"title": "체크메이트", "description": "복수와 집착이 얽힌 관계를 그린 작품"},
         {"title": "물가의 밤", "description": "복잡한 감정선과 관계를 중심으로 한 작품"},
         {"title": "남고 소년", "description": "고등학생들의 일상과 성장을 그린 작품"},
-        {"title": "시맨틱 에러", "description": "정반대 성격의 대학생들이 만나 벌어지는 이야기"},
+        {"title": "시맨틱 에러(개정판)", "description": "정반대 성격의 대학생들이 만나 벌어지는 이야기"},
         {"title": "위험한 편의점", "description": "편의점 아르바이트생과 손님의 관계를 그린 작품"}
     ],
     "드라마": [
@@ -182,177 +182,11 @@ webtoon_links = {
     "나 혼자만 레벨업": "https://page.kakao.com/content/50866481/",
     "초인의 게임": "https://comic.naver.com/webtoon/list?titleId=795658",
     "철수를 구하시오": "https://ridibooks.com/books/4851000001",
+    "남고 소년": "https://www.lezhin.com/ko/comic/highschoolboy",
+    "시맨틱 에러(개정판)": "https://ridibooks.com/books/3392000097",
 
     "작전명 순정": "https://comic.naver.com/webtoon/list?titleId=793275",
     "세기말 풋사과 보습학원": "https://comic.naver.com/webtoon/list?titleId=761722",
     "바른연애 길잡이": "https://comic.naver.com/webtoon/list?titleId=703852",
     "여신강림": "https://comic.naver.com/webtoon/list?titleId=703846",
     "연애혁명": "https://comic.naver.com/webtoon/list?titleId=570503",
-
-    "참교육": "https://comic.naver.com/webtoon/list?titleId=758037",
-    "캐슬": "https://comic.naver.com/webtoon/list?titleId=736744",
-    "외모지상주의": "https://comic.naver.com/webtoon/list?titleId=641253",
-    "격기 3반": "https://comic.naver.com/webtoon/list?titleId=701535",
-    "약한영웅": "https://comic.naver.com/webtoon/list?titleId=710751",
-
-    "타인은 지옥이다": "https://comic.naver.com/webtoon/list?titleId=708378",
-    "스위트홈": "https://comic.naver.com/webtoon/list?titleId=701081",
-    "돼지우리": "https://comic.naver.com/webtoon/list?titleId=724854",
-    "방탈출": "https://comic.naver.com/webtoon/list?titleId=733034",
-    "살인자ㅇ난감": "https://comic.naver.com/webtoon/list?titleId=719899",
-
-    "유미의 세포들": "https://comic.naver.com/webtoon/list?titleId=651673",
-    "이번 생도 잘 부탁해": "https://comic.naver.com/webtoon/list?titleId=746858",
-    "정년이": "https://comic.naver.com/webtoon/list?titleId=726214",
-    "중증외상센터 : 골든 아워": "https://comic.naver.com/webtoon/list?titleId=738174",
-    "가비지타임": "https://comic.naver.com/webtoon/list?titleId=703844"
-}
-
-
-# ── 이미지 파일 ──
-image_files = {
-    "판타지": "별빛 아래 떠 있는 환상의 성채.png",
-    "로맨스": "벚꽃빛 강변의 황혼.png",
-    "액션": "붉은 달 아래의 종말 전투.png",
-    "스릴러": "달빛 아래 유령도시의 성당 폐허.png",
-    "BL": "녹빛 폐허 속의 은밀한 입맞춤.png",
-    "드라마": "황금빛 노을의 꽃 테라스와 환상도시.png"
-}
-
-root_dir = Path(__file__).resolve().parent.parent
-
-
-def get_image_path(filename):
-    path = root_dir / filename
-    if path.exists():
-        return str(path)
-    return None
-
-
-# ── 페이지 머리말 ──
-st.markdown("""
-<div class="archive-header">
-    <div class="small">THE OLD WEBTOON ARCHIVE · EST. 2026</div>
-    <h1>WEBTOON ARCHIVE</h1>
-    <p>오래된 전단지 속에서 발견한, 당신만의 다음 이야기</p>
-    <div class="small">NO. 001 — STORY RECOMMENDATION PAPER</div>
-</div>
-""", unsafe_allow_html=True)
-
-st.markdown("""
-<div class="notice">
-    <div class="notice-title">▣ 오늘의 추천 전단 ▣</div>
-    <p>취향에 맞는 장르를 고르면 자료실에서 작품 한 편을 꺼내 드립니다.</p>
-    <p>종이의 흔적은 오래되어도, 이야기는 아직 끝나지 않았습니다.</p>
-</div>
-""", unsafe_allow_html=True)
-
-st.markdown(
-    '<div class="section-title">01. 취향 조사표 / READER PROFILE</div>',
-    unsafe_allow_html=True
-)
-
-left, right = st.columns(2)
-
-with left:
-    genre = st.selectbox("▣ 장르를 선택하세요", list(webtoon_data.keys()))
-
-with right:
-    mood = st.selectbox(
-        "▣ 오늘 읽고 싶은 분위기",
-        ["상관없음", "힐링", "성장", "피폐", "개그"]
-    )
-
-st.caption(
-    "※ 분위기는 취향 기록용 선택지이며, 현재 추천은 선택한 장르 안에서 무작위로 이루어집니다."
-)
-
-if st.button("✦ 자료실에서 작품 한 편 찾기 ✦", use_container_width=True):
-    st.session_state["recommended_webtoon"] = {
-        "genre": genre,
-        "mood": mood,
-        "webtoon": random.choice(webtoon_data[genre])
-    }
-
-# ── 추천 결과 표시 ──
-result = st.session_state.get("recommended_webtoon")
-
-if result:
-    st.markdown(
-        '<div class="section-title">02. 발굴된 작품 / ARCHIVE FIND</div>',
-        unsafe_allow_html=True
-    )
-
-    result_genre = result["genre"]
-    webtoon = result["webtoon"]
-    title = webtoon["title"]
-    image_path = get_image_path(image_files[result_genre])
-
-    image_col, text_col = st.columns([1, 1.3], gap="large")
-
-    with image_col:
-        if image_path:
-            st.image(image_path, use_container_width=True)
-        else:
-            st.warning(
-                "이미지를 찾지 못했어요. 저장소 최상위의 이미지 파일 이름을 확인해 주세요."
-            )
-
-    with text_col:
-        st.markdown('<div class="poster">', unsafe_allow_html=True)
-        st.markdown(
-            '<span class="poster-stamp">ARCHIVE PICK</span>',
-            unsafe_allow_html=True
-        )
-        st.markdown(
-            f'<div class="result-title">{title}</div>',
-            unsafe_allow_html=True
-        )
-        st.markdown(
-            f'<div class="result-description">{webtoon["description"]}</div>',
-            unsafe_allow_html=True
-        )
-        st.markdown(
-            f'<p>분류 번호: WT-{list(webtoon_data.keys()).index(result_genre) + 1:02d}</p>',
-            unsafe_allow_html=True
-        )
-        st.markdown(
-            f'<p>선택한 분위기: {result["mood"]}</p>',
-            unsafe_allow_html=True
-        )
-        st.markdown('</div>', unsafe_allow_html=True)
-
-        # ── 작품 바로가기 ──
-        link = webtoon_links.get(title)
-
-        if link:
-            st.link_button(
-                "📖 작품 보러 가기 ↗",
-                link,
-                use_container_width=True
-            )
-        else:
-            st.info(
-                "이 작품은 바로가기 주소가 등록되지 않았어요. "
-                "자료실에 작품 주소를 추가하면 버튼이 표시됩니다."
-            )
-
-    # ── 다른 작품 추천 ──
-    if st.button("↻ 다른 작품 다시 뽑기", use_container_width=True):
-        current_genre = result["genre"]
-        current_mood = result["mood"]
-
-        st.session_state["recommended_webtoon"] = {
-            "genre": current_genre,
-            "mood": current_mood,
-            "webtoon": random.choice(webtoon_data[current_genre])
-        }
-        st.rerun()
-
-
-st.markdown("""
-<div class="footer-note">
-    WEBTOON ARCHIVE · PAPER COLLECTION SERIES<br>
-    오래된 종이, 새로운 이야기 · 자료실 기록은 계속됩니다.
-</div>
-""", unsafe_allow_html=True)
