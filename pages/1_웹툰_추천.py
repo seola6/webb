@@ -103,7 +103,8 @@ st.markdown("""
     padding-top: 18px;
     margin-top: 38px;
 }
-div.stButton > button {
+div.stButton > button,
+div.stLinkButton > a {
     background: #354637;
     color: #f8f2e4;
     border: 1px solid #354637;
@@ -111,7 +112,8 @@ div.stButton > button {
     padding: 10px 22px;
     font-family: 'Gowun Batang', serif;
 }
-div.stButton > button:hover {
+div.stButton > button:hover,
+div.stLinkButton > a:hover {
     background: #52664e;
     color: white;
     border-color: #52664e;
@@ -123,6 +125,7 @@ div[data-baseweb="select"] > div {
 }
 </style>
 """, unsafe_allow_html=True)
+
 
 # ── 작품 데이터 ──
 webtoon_data = {
@@ -170,7 +173,43 @@ webtoon_data = {
     ]
 }
 
-# 이미지 파일은 main.py와 같은 저장소 최상위 폴더에 있음
+
+# ── 작품 링크 ──
+# 확인된 작품 주소만 연결하고, 주소가 없는 작품은 안내 문구를 표시함.
+webtoon_links = {
+    "전지적 독자 시점": "https://comic.naver.com/webtoon/list?titleId=747269",
+    "화산귀환": "https://comic.naver.com/webtoon/list?titleId=769209",
+    "나 혼자만 레벨업": "https://page.kakao.com/content/50866481/",
+    "초인의 게임": "https://comic.naver.com/webtoon/list?titleId=795658",
+    "철수를 구하시오": "https://ridibooks.com/books/4851000001",
+
+    "작전명 순정": "https://comic.naver.com/webtoon/list?titleId=793275",
+    "세기말 풋사과 보습학원": "https://comic.naver.com/webtoon/list?titleId=761722",
+    "바른연애 길잡이": "https://comic.naver.com/webtoon/list?titleId=703852",
+    "여신강림": "https://comic.naver.com/webtoon/list?titleId=703846",
+    "연애혁명": "https://comic.naver.com/webtoon/list?titleId=570503",
+
+    "참교육": "https://comic.naver.com/webtoon/list?titleId=758037",
+    "캐슬": "https://comic.naver.com/webtoon/list?titleId=736744",
+    "외모지상주의": "https://comic.naver.com/webtoon/list?titleId=641253",
+    "격기 3반": "https://comic.naver.com/webtoon/list?titleId=701535",
+    "약한영웅": "https://comic.naver.com/webtoon/list?titleId=710751",
+
+    "타인은 지옥이다": "https://comic.naver.com/webtoon/list?titleId=708378",
+    "스위트홈": "https://comic.naver.com/webtoon/list?titleId=701081",
+    "돼지우리": "https://comic.naver.com/webtoon/list?titleId=724854",
+    "방탈출": "https://comic.naver.com/webtoon/list?titleId=733034",
+    "살인자ㅇ난감": "https://comic.naver.com/webtoon/list?titleId=719899",
+
+    "유미의 세포들": "https://comic.naver.com/webtoon/list?titleId=651673",
+    "이번 생도 잘 부탁해": "https://comic.naver.com/webtoon/list?titleId=746858",
+    "정년이": "https://comic.naver.com/webtoon/list?titleId=726214",
+    "중증외상센터 : 골든 아워": "https://comic.naver.com/webtoon/list?titleId=738174",
+    "가비지타임": "https://comic.naver.com/webtoon/list?titleId=703844"
+}
+
+
+# ── 이미지 파일 ──
 image_files = {
     "판타지": "별빛 아래 떠 있는 환상의 성채.png",
     "로맨스": "벚꽃빛 강변의 황혼.png",
@@ -180,14 +219,15 @@ image_files = {
     "드라마": "황금빛 노을의 꽃 테라스와 환상도시.png"
 }
 
-# 현재 파일(pages 폴더) 기준으로 저장소 최상위 폴더 찾기
 root_dir = Path(__file__).resolve().parent.parent
+
 
 def get_image_path(filename):
     path = root_dir / filename
     if path.exists():
         return str(path)
     return None
+
 
 # ── 페이지 머리말 ──
 st.markdown("""
@@ -207,7 +247,10 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-st.markdown('<div class="section-title">01. 취향 조사표 / READER PROFILE</div>', unsafe_allow_html=True)
+st.markdown(
+    '<div class="section-title">01. 취향 조사표 / READER PROFILE</div>',
+    unsafe_allow_html=True
+)
 
 left, right = st.columns(2)
 
@@ -220,7 +263,9 @@ with right:
         ["상관없음", "힐링", "성장", "피폐", "개그"]
     )
 
-st.caption("※ 분위기는 취향 기록용 선택지이며, 현재 추천은 선택한 장르 안에서 무작위로 이루어집니다.")
+st.caption(
+    "※ 분위기는 취향 기록용 선택지이며, 현재 추천은 선택한 장르 안에서 무작위로 이루어집니다."
+)
 
 if st.button("✦ 자료실에서 작품 한 편 찾기 ✦", use_container_width=True):
     st.session_state["recommended_webtoon"] = {
@@ -229,14 +274,18 @@ if st.button("✦ 자료실에서 작품 한 편 찾기 ✦", use_container_widt
         "webtoon": random.choice(webtoon_data[genre])
     }
 
-# ── 추천 결과 유지 및 표시 ──
+# ── 추천 결과 표시 ──
 result = st.session_state.get("recommended_webtoon")
 
 if result:
-    st.markdown('<div class="section-title">02. 발굴된 작품 / ARCHIVE FIND</div>', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="section-title">02. 발굴된 작품 / ARCHIVE FIND</div>',
+        unsafe_allow_html=True
+    )
 
     result_genre = result["genre"]
     webtoon = result["webtoon"]
+    title = webtoon["title"]
     image_path = get_image_path(image_files[result_genre])
 
     image_col, text_col = st.columns([1, 1.3], gap="large")
@@ -245,24 +294,61 @@ if result:
         if image_path:
             st.image(image_path, use_container_width=True)
         else:
-            st.warning("이미지를 찾지 못했어요. 저장소 최상위의 이미지 파일 이름을 확인해 주세요.")
+            st.warning(
+                "이미지를 찾지 못했어요. 저장소 최상위의 이미지 파일 이름을 확인해 주세요."
+            )
 
     with text_col:
         st.markdown('<div class="poster">', unsafe_allow_html=True)
-        st.markdown('<span class="poster-stamp">ARCHIVE PICK</span>', unsafe_allow_html=True)
-        st.markdown(f'<div class="result-title">{webtoon["title"]}</div>', unsafe_allow_html=True)
-        st.markdown(f'<div class="result-description">{webtoon["description"]}</div>', unsafe_allow_html=True)
-        st.markdown(f'<p>분류 번호: WT-{list(webtoon_data.keys()).index(result_genre) + 1:02d}</p>', unsafe_allow_html=True)
-        st.markdown(f'<p>선택한 분위기: {result["mood"]}</p>', unsafe_allow_html=True)
+        st.markdown(
+            '<span class="poster-stamp">ARCHIVE PICK</span>',
+            unsafe_allow_html=True
+        )
+        st.markdown(
+            f'<div class="result-title">{title}</div>',
+            unsafe_allow_html=True
+        )
+        st.markdown(
+            f'<div class="result-description">{webtoon["description"]}</div>',
+            unsafe_allow_html=True
+        )
+        st.markdown(
+            f'<p>분류 번호: WT-{list(webtoon_data.keys()).index(result_genre) + 1:02d}</p>',
+            unsafe_allow_html=True
+        )
+        st.markdown(
+            f'<p>선택한 분위기: {result["mood"]}</p>',
+            unsafe_allow_html=True
+        )
         st.markdown('</div>', unsafe_allow_html=True)
 
+        # ── 작품 바로가기 ──
+        link = webtoon_links.get(title)
+
+        if link:
+            st.link_button(
+                "📖 작품 보러 가기 ↗",
+                link,
+                use_container_width=True
+            )
+        else:
+            st.info(
+                "이 작품은 바로가기 주소가 등록되지 않았어요. "
+                "자료실에 작품 주소를 추가하면 버튼이 표시됩니다."
+            )
+
+    # ── 다른 작품 추천 ──
     if st.button("↻ 다른 작품 다시 뽑기", use_container_width=True):
+        current_genre = result["genre"]
+        current_mood = result["mood"]
+
         st.session_state["recommended_webtoon"] = {
-            "genre": result_genre,
-            "mood": result["mood"],
-            "webtoon": random.choice(webtoon_data[result_genre])
+            "genre": current_genre,
+            "mood": current_mood,
+            "webtoon": random.choice(webtoon_data[current_genre])
         }
         st.rerun()
+
 
 st.markdown("""
 <div class="footer-note">
