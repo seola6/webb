@@ -394,8 +394,9 @@ if st.button("🎰  룰렛 돌리기!", use_container_width=True):
     st.session_state.roulette_result = result
     st.session_state.roulette_previous = result
 
+    
     # 당첨 순간 폭발 애니메이션
-    roulette_display.markdown(f"""
+    jackpot_html = f"""
     <div class="roulette-screen jackpot-screen">
         <div class="burst-light"></div>
         <div class="confetti"></div>
@@ -414,9 +415,15 @@ if st.button("🎰  룰렛 돌리기!", use_container_width=True):
             YOUR NEXT WEBTOON HAS BEEN SELECTED!
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    """
+
+    roulette_display.markdown(
+        jackpot_html,
+        unsafe_allow_html=True
+    )
 
     status_display.success("🎉 팡! 당첨! 오늘의 웹툰이 결정됐어!")
+
 
 elif st.session_state.roulette_result:
     result = st.session_state.roulette_result
