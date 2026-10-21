@@ -190,3 +190,4 @@ webtoon_links = {
     "바른연애 길잡이": "https://comic.naver.com/webtoon/list?titleId=703852",
     "여신강림": "https://comic.naver.com/webtoon/list?titleId=703846",
     "연애혁명": "https://comic.naver.com/webtoon/list?titleId=570503",
+}
