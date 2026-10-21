@@ -395,6 +395,7 @@ if st.button("🎰  룰렛 돌리기!", use_container_width=True):
     st.session_state.roulette_previous = result
 
     
+   
     # 당첨 순간 폭발 애니메이션
     jackpot_html = f"""
     <div class="roulette-screen jackpot-screen">
