@@ -1,6 +1,5 @@
 import streamlit as st
 import random
-from pathlib import Path
 
 st.set_page_config(
     page_title="WEBTOON ARCHIVE | 추천 자료실",
@@ -12,122 +11,37 @@ st.set_page_config(
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap');
-
-.stApp {
-    background-color: #e9e3d2;
-    color: #292c20;
-    font-family: 'Gowun Batang', serif;
-}
-.block-container {
-    max-width: 1050px;
-    padding-top: 2rem;
-    padding-bottom: 3rem;
-}
-.archive-header {
-    background: #354637;
-    color: #f2ead7;
-    padding: 32px 28px;
-    border: 3px double #d5c7a4;
-    outline: 1px solid #354637;
-    outline-offset: 5px;
-    text-align: center;
-    margin-bottom: 32px;
-}
-.archive-header .small {
-    font-size: 12px;
-    letter-spacing: 4px;
-    color: #d5c7a4;
-}
-.archive-header h1 {
-    color: #f2ead7;
-    font-size: clamp(30px, 5vw, 52px);
-    letter-spacing: 3px;
-    margin: 12px 0;
-}
-.archive-header p {
-    color: #e1d7bd;
-    font-size: 14px;
-}
-.notice {
-    background: #f8f2e4;
-    border: 1px solid #8b8066;
-    padding: 18px 22px;
-    margin: 15px 0 22px 0;
-    box-shadow: 4px 4px 0 #d1c7b1;
-}
-.notice-title {
-    font-size: 12px;
-    letter-spacing: 3px;
-    color: #8c4236;
-    font-weight: bold;
-}
-.section-title {
-    border-bottom: 2px solid #354637;
-    padding-bottom: 8px;
-    margin-top: 24px;
-    font-size: 22px;
-    font-weight: bold;
-}
-.poster {
-    background: #f8f2e4;
-    border: 1px solid #a69a7d;
-    padding: 20px;
-    box-shadow: 5px 5px 0 #d1c7b1;
-    margin: 10px 0;
-}
-.poster-stamp {
-    display: inline-block;
-    color: #9b4538;
-    border: 2px solid #9b4538;
-    padding: 3px 9px;
-    font-size: 12px;
-    transform: rotate(-3deg);
-    letter-spacing: 2px;
-}
-.result-title {
-    font-size: 30px;
-    font-weight: bold;
-    color: #354637;
-    margin: 12px 0;
-}
-.result-description {
-    font-size: 16px;
-    line-height: 1.9;
-    color: #454537;
-}
-.footer-note {
-    text-align: center;
-    color: #716b58;
-    font-size: 12px;
-    border-top: 1px dashed #a69a7d;
-    padding-top: 18px;
-    margin-top: 38px;
-}
-div.stButton > button,
-div.stLinkButton > a {
-    background: #354637;
-    color: #f8f2e4;
-    border: 1px solid #354637;
-    border-radius: 0;
-    padding: 10px 22px;
-    font-family: 'Gowun Batang', serif;
-}
-div.stButton > button:hover,
-div.stLinkButton > a:hover {
-    background: #52664e;
-    color: white;
-    border-color: #52664e;
-}
-div[data-baseweb="select"] > div {
-    background: #f8f2e4;
-    border-color: #a69a7d;
-    border-radius: 0;
-}
+.stApp { background-color: #e9e3d2; color: #292c20; font-family: 'Gowun Batang', serif; }
+.block-container { max-width: 1050px; padding-top: 2rem; padding-bottom: 3rem; }
+.archive-header { background: #354637; color: #f2ead7; padding: 32px 28px; border: 3px double #d5c7a4; outline: 1px solid #354637; outline-offset: 5px; text-align: center; margin-bottom: 32px; }
+.archive-header .small { font-size: 12px; letter-spacing: 4px; color: #d5c7a4; }
+.archive-header h1 { color: #f2ead7; font-size: clamp(30px, 5vw, 52px); letter-spacing: 3px; margin: 12px 0; }
+.archive-header p { color: #e1d7bd; font-size: 14px; }
+.notice { background: #f8f2e4; border: 1px solid #8b8066; padding: 18px 22px; margin: 15px 0 22px 0; box-shadow: 4px 4px 0 #d1c7b1; }
+.notice-title { font-size: 12px; letter-spacing: 3px; color: #8c4236; font-weight: bold; }
+.poster { background: #f8f2e4; border: 1px solid #a69a7d; padding: 20px; box-shadow: 5px 5px 0 #d1c7b1; margin: 10px 0; }
+.poster-stamp { display: inline-block; color: #9b4538; border: 2px solid #9b4538; padding: 3px 9px; font-size: 12px; transform: rotate(-3deg); letter-spacing: 2px; }
+.result-title { font-size: 30px; font-weight: bold; color: #354637; margin: 12px 0; }
+.result-description { font-size: 16px; line-height: 1.9; color: #454537; }
+.footer-note { text-align: center; color: #716b58; font-size: 12px; border-top: 1px dashed #a69a7d; padding-top: 18px; margin-top: 38px; }
+div.stButton > button, div.stLinkButton > a { background: #354637; color: #f8f2e4; border: 1px solid #354637; border-radius: 0; padding: 10px 22px; font-family: 'Gowun Batang', serif; }
+div.stButton > button:hover, div.stLinkButton > a:hover { background: #52664e; color: white; border-color: #52664e; }
+div[data-baseweb="select"] > div { background: #f8f2e4; border-color: #a69a7d; border-radius: 0; }
 </style>
 """, unsafe_allow_html=True)
 
+st.markdown("""
+<div class="archive-header">
+  <div class="small">WEBTOON ARCHIVE · COLLECTION NO. 01</div>
+  <h1>WEBTOON RECOMMENDATION</h1>
+  <p>취향에 맞는 작품을 찾아보는 작은 웹툰 자료실</p>
+</div>
+<div class="notice">
+  <div class="notice-title">ARCHIVE NOTE</div>
+  장르와 기분을 선택하면 작품 하나를 추천해 줍니다. 작품 제목 아래 버튼을 눌러 작품 페이지로 이동할 수 있어요.
+</div>
+""", unsafe_allow_html=True)
 
-# ── 작품 데이터 ──
 webtoon_data = {
     "판타지": [
         {"title": "전지적 독자 시점", "description": "소설 속 세계가 현실이 된 후 살아남기 위한 이야기"},
@@ -144,11 +58,11 @@ webtoon_data = {
         {"title": "연애혁명", "description": "고등학생들의 사랑과 우정을 그린 학원 로맨스"}
     ],
     "액션": [
-        {"title": "참교육", "description": "학교 폭력과 사회 문제를 해결하는 교육관들의 이야기"},
+        {"title": "참교육", "description": "학교 문제에 맞서는 교육관들의 이야기"},
         {"title": "캐슬", "description": "복수를 위해 범죄 조직에 맞서는 남자의 액션 느와르"},
         {"title": "외모지상주의", "description": "두 개의 몸을 가지게 된 주인공의 성장과 격투 이야기"},
         {"title": "격기 3반", "description": "격투기를 중심으로 펼쳐지는 학원 액션물"},
-        {"title": "약한영웅", "description": "약해 보이는 학생이 지능과 전략으로 싸워 나가는 이야기"}
+        {"title": "약한영웅", "description": "주인공이 지능과 전략으로 싸워 나가는 이야기"}
     ],
     "스릴러": [
         {"title": "타인은 지옥이다", "description": "수상한 고시원 사람들 사이에서 벌어지는 심리 스릴러"},
@@ -173,21 +87,65 @@ webtoon_data = {
     ]
 }
 
-
-# ── 작품 링크 ──
-# 확인된 작품 주소만 연결하고, 주소가 없는 작품은 안내 문구를 표시함.
 webtoon_links = {
     "전지적 독자 시점": "https://comic.naver.com/webtoon/list?titleId=747269",
     "화산귀환": "https://comic.naver.com/webtoon/list?titleId=769209",
-    "나 혼자만 레벨업": "https://page.kakao.com/content/50866481/",
+    "나 혼자만 레벨업": "https://page.kakao.com/content/50866481",
     "초인의 게임": "https://comic.naver.com/webtoon/list?titleId=795658",
     "철수를 구하시오": "https://ridibooks.com/books/4851000001",
-    "남고 소년": "https://www.lezhin.com/ko/comic/highschoolboy",
-    "시맨틱 에러(개정판)": "https://ridibooks.com/books/3392000097",
-
     "작전명 순정": "https://comic.naver.com/webtoon/list?titleId=793275",
     "세기말 풋사과 보습학원": "https://comic.naver.com/webtoon/list?titleId=761722",
     "바른연애 길잡이": "https://comic.naver.com/webtoon/list?titleId=703852",
     "여신강림": "https://comic.naver.com/webtoon/list?titleId=703846",
     "연애혁명": "https://comic.naver.com/webtoon/list?titleId=570503",
+    "참교육": "https://comic.naver.com/webtoon/list?titleId=758037",
+    "캐슬": "https://comic.naver.com/webtoon/list?titleId=733074",
+    "외모지상주의": "https://comic.naver.com/webtoon/list?titleId=650305",
+    "격기 3반": "https://comic.naver.com/webtoon/list?titleId=701535",
+    "약한영웅": "https://comic.naver.com/webtoon/list?titleId=710751",
+    "타인은 지옥이다": "https://comic.naver.com/webtoon/list?titleId=721433",
+    "스위트홈": "https://comic.naver.com/webtoon/list?titleId=708378",
+    "돼지우리": "https://comic.naver.com/webtoon/list?titleId=732955",
+    "방탈출": "https://comic.naver.com/webtoon/list?titleId=737628",
+    "살인자ㅇ난감": "https://comic.naver.com/webtoon/list?titleId=701081",
+    "유미의 세포들": "https://comic.naver.com/webtoon/list?titleId=709731",
+    "중증외상센터 : 골든 아워": "https://comic.naver.com/webtoon/list?titleId=738174",
+    "가비지타임": "https://comic.naver.com/webtoon/list?titleId=701545",
+    "남고 소년": "https://www.lezhin.com/ko/comic/highschoolboy",
+    "시맨틱 에러(개정판)": "https://ridibooks.com/books/3392000097"
 }
+
+
+st.markdown('<div class="section-title">01 / 작품 찾기</div>', unsafe_allow_html=True)
+left, right = st.columns(2)
+with left:
+    genre = st.selectbox("장르 선택", list(webtoon_data.keys()))
+with right:
+    mood = st.selectbox("오늘의 기분", ["상관없음", "힐링", "성장", "피폐", "개그", "긴장감"])
+
+if "recommended_webtoon" not in st.session_state:
+    st.session_state.recommended_webtoon = None
+
+if st.button("✦ 추천 받기", use_container_width=True):
+    st.session_state.recommended_webtoon = random.choice(webtoon_data[genre])
+
+if st.session_state.recommended_webtoon:
+    item = st.session_state.recommended_webtoon
+    st.markdown('<div class="section-title">02 / 오늘의 추천 작품</div>', unsafe_allow_html=True)
+    st.markdown(f"""
+    <div class="poster">
+      <span class="poster-stamp">ARCHIVE PICK</span>
+      <div class="result-title">{item["title"]}</div>
+      <div class="result-description">{item["description"]}</div>
+    </div>
+    """, unsafe_allow_html=True)
+    link = webtoon_links.get(item["title"])
+    if link:
+        st.link_button("작품 페이지 바로가기 ↗", link, use_container_width=True)
+    else:
+        st.info("이 작품의 링크는 아직 등록되지 않았어요.")
+    if st.button("다른 작품 추천받기", use_container_width=True):
+        st.session_state.recommended_webtoon = random.choice(webtoon_data[genre])
+        st.rerun()
+
+st.markdown('<div class="footer-note">WEBTOON ARCHIVE · 개인 취향 탐색용 자료실</div>', unsafe_allow_html=True)
