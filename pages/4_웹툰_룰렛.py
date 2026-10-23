@@ -340,7 +340,6 @@ roulette_display = st.empty()
 status_display = st.empty()
 
 if st.button("🎰  룰렛 돌리기!", use_container_width=True):
-
     candidates = webtoon_data[genre].copy()
     previous = st.session_state.roulette_previous
 
@@ -348,16 +347,10 @@ if st.button("🎰  룰렛 돌리기!", use_container_width=True):
     if previous in candidates and len(candidates) > 1:
         candidates.remove(previous)
 
-    # 최종 당첨작 결정
+    # 당첨작은 한 번만 결정하고 session_state에 저장
     result = random.choice(candidates)
+    others = [title for title in webtoon_data[genre] if title != result]
 
-    # 회전 중 보여 줄 제목
-    others = [
-        title for title in webtoon_data[genre]
-        if title != result
-    ]
-
-    # READY 화면
     roulette_display.markdown("""
     <div class="roulette-screen">
         <div class="roulette-status">★ ARCHIVE MACHINE ★</div>
@@ -366,19 +359,11 @@ if st.button("🎰  룰렛 돌리기!", use_container_width=True):
         <div class="roulette-status">DRAWING YOUR NEXT STORY</div>
     </div>
     """, unsafe_allow_html=True)
-
     time.sleep(0.25)
 
-    # 처음엔 빠르게, 나중엔 느리게
-    delays = [
-        0.06, 0.07, 0.08, 0.09, 0.10,
-        0.12, 0.14, 0.17, 0.20, 0.24,
-        0.29, 0.35, 0.42, 0.50
-    ]
-
+    delays = [0.06, 0.07, 0.08, 0.09, 0.10, 0.12, 0.14, 0.17, 0.20, 0.24, 0.29, 0.35, 0.42, 0.50]
     for delay in delays:
         title = random.choice(others) if others else result
-
         roulette_display.markdown(f"""
         <div class="roulette-screen">
             <div class="roulette-status">★ SPINNING ★</div>
@@ -387,53 +372,39 @@ if st.button("🎰  룰렛 돌리기!", use_container_width=True):
             <div class="roulette-status">SEARCHING THE ARCHIVE...</div>
         </div>
         """, unsafe_allow_html=True)
-
         time.sleep(delay)
 
-    # 당첨 결과 저장
     st.session_state.roulette_result = result
     st.session_state.roulette_previous = result
+    st.session_state.roulette_genre = genre
 
-    
-   
-       # 당첨 순간 폭발 애니메이션
     jackpot_html = f"""
     <div class="roulette-screen jackpot-screen">
         <div class="burst-light"></div>
-        <div class="confetti"></div>
-        <div class="confetti"></div>
-        <div class="confetti"></div>
-        <div class="confetti"></div>
-        <div class="confetti"></div>
-        <div class="confetti"></div>
-        <div class="confetti"></div>
-        <div class="confetti"></div>
+        <div class="confetti"></div><div class="confetti"></div>
+        <div class="confetti"></div><div class="confetti"></div>
+        <div class="confetti"></div><div class="confetti"></div>
+        <div class="confetti"></div><div class="confetti"></div>
         <div class="roulette-status">★ JACKPOT ★</div>
         <div class="roulette-deco">✦ ✨ ✦</div>
         <div class="roulette-name">「 {result} 」</div>
-        <div class="roulette-status">
-            YOUR NEXT WEBTOON HAS BEEN SELECTED!
-        </div>
+        <div class="roulette-status">YOUR NEXT WEBTOON HAS BEEN SELECTED!</div>
     </div>
     """
-
-    # HTML을 화면에 렌더링
-    st.markdown(jackpot_html, unsafe_allow_html=True)
-
+    roulette_display.markdown(jackpot_html, unsafe_allow_html=True)
     status_display.success("🎉 팡! 당첨! 오늘의 웹툰이 결정됐어!")
 
 elif st.session_state.roulette_result:
     result = st.session_state.roulette_result
-
+    result_genre = st.session_state.get("roulette_genre", genre)
     roulette_display.markdown(f"""
-    <div class="roulette-screen">
+    <div class="roulette-screen jackpot-screen">
         <div class="roulette-status">★ YOUR NEXT WEBTOON ★</div>
         <div class="roulette-deco">✦ ✨ ✦</div>
         <div class="roulette-name">「 {result} 」</div>
-        <div class="roulette-status">장르: {genre}</div>
+        <div class="roulette-status">장르: {result_genre}</div>
     </div>
     """, unsafe_allow_html=True)
-
 else:
     roulette_display.markdown("""
     <div class="roulette-screen">
@@ -444,33 +415,26 @@ else:
     </div>
     """, unsafe_allow_html=True)
 
-# ── 결과 티켓 ──
+# ── 결과 티켓: 위쪽 룰렛과 같은 저장 결과를 사용 ──
 if st.session_state.roulette_result:
     result = st.session_state.roulette_result
-
+    result_genre = st.session_state.get("roulette_genre", genre)
     st.markdown(f"""
     <div class="ticket">
         <div class="ticket-label">★ YOUR NEXT WEBTOON ★</div>
         <div class="ticket-title">「 {result} 」</div>
         <div class="ticket-bottom">
-            SELECTED FROM WEBTOON ARCHIVE · 장르: {genre}
+            SELECTED FROM WEBTOON ARCHIVE · 장르: {result_genre}
         </div>
     </div>
     """, unsafe_allow_html=True)
-
-    st.success(
-        "오늘의 작품이 선정되었습니다! "
-        "마음에 들지 않으면 한 번 더 돌려 보세요."
-    )
-
+    st.success("오늘의 작품이 선정되었습니다! 마음에 들지 않으면 한 번 더 돌려 보세요.")
 else:
     st.markdown("""
     <div class="ticket">
         <div class="ticket-label">READY?</div>
         <div class="ticket-title">운명의 버튼을 누르세요!</div>
-        <div class="ticket-bottom">
-            YOUR NEXT STORY IS WAITING...
-        </div>
+        <div class="ticket-bottom">YOUR NEXT STORY IS WAITING...</div>
     </div>
     """, unsafe_allow_html=True)
 
