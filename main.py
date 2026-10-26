@@ -1,4 +1,3 @@
-
 import streamlit as st
 import random
 
@@ -8,27 +7,127 @@ st.set_page_config(
     layout="wide"
 )
 
-# ── 웹툰 데이터 ──
+# ── 조사한 웹툰 데이터 및 공식 플랫폼 링크 ──
 webtoon_data = {
     "판타지": [
-        "전지적 독자 시점", "화산귀환", "나 혼자만 레벨업",
-        "초인의 게임", "철수를 구하시오"
+        "별을 품은 소드마스터",
+        "종말이 찾아왔다",
+        "샤MONEY",
+        "생존지상주의",
+        "검술 명가의 네크로맨서",
+        "대마법사 커리큘럼",
+        "집구석 절대자",
+        "전지적 독자 시점",
+        "하울링",
+        "그림으로 승부",
+        "엄마를 만나러 가는 길",
+        "전자오락수호대",
+        "무한의 마법사",
+        "블랙 헤이즈",
+        "SSS급 죽어야 사는 헌터",
+        "천재 궁수의 스트리밍",
+        "만렙 플레이어의 100번째 회귀",
+        "성자는 개뿔, 현대의학의 힘이다",
+        "월스트리트 천재의 시한부 투자법"
     ],
     "로맨스": [
-        "작전명 순정", "시든 꽃에 눈물을", "럭키비치"
+        "백작가의 비밀스런 시녀님",
+        "벙커의 낮",
+        "세림의 철칙",
+        "연상녀 클럽",
+        "완벽한 선배의 Hide!",
+        "해일주의보",
+        "비공식 CC",
+        "1인칭 혈육시점",
+        "사랑이 끝나면 네가 끝난다",
+        "인소의 법칙"
+    ],
+    "로맨스 판타지": [
+        "백작가의 비밀스런 시녀님",
+        "죽었는데 왜 집착하세요",
+        "사신님과 3년 계약",
+        "내 호수에 가둔 인어",
+        "엄마가 계약결혼 했다",
+        "이번 생은 가주가 되겠습니다"
     ],
     "액션": [
-        "광마회귀", "나노마신", "외모지상주의", "상남자"
+        "사랑은 좀비를 찢고",
+        "정글쥬스",
+        "싸움배달",
+        "레디액션",
+        "은퇴한 킬러는 힐링하고 싶다",
+        "악마에 입문했습니다! 이루마 군",
+        "엔드와 세이브",
+        "흡혈귀는 툭하면 죽는다"
     ],
     "스릴러": [
-        "44교시 생존수업", "종말이 찾아왔다", "조의 영역"
+        "44교시 생존수업",
+        "쪽팔려 게임",
+        "똑 닮은 딸",
+        "제물 투표",
+        "귀촌리",
+        "모닥불 친구들",
+        "유령의 노래"
     ],
     "BL": [
-        "물가의 밤", "체크메이트", "남고소년"
+        "남고 소년",
+        "시맨틱 에러(개정판)"
     ],
-    "드라마": [
-        "재벌집 막내아들", "마흔 즈음에", "육아일기"
-    ]
+    "기타": []
+}
+
+webtoon_links = {
+    "별을 품은 소드마스터": "https://comic.naver.com/webtoon/list?titleId=816809",
+    "종말이 찾아왔다": "https://comic.naver.com/webtoon/list?titleId=838002",
+    "샤MONEY": "https://comic.naver.com/webtoon/list?titleId=840014",
+    "생존지상주의": "https://comic.naver.com/webtoon/list?titleId=853709",
+    "검술 명가의 네크로맨서": "https://comic.naver.com/webtoon/list?titleId=850499",
+    "대마법사 커리큘럼": "https://comic.naver.com/webtoon/list?titleId=844951",
+    "집구석 절대자": "https://comic.naver.com/webtoon/list?titleId=834351",
+    "전지적 독자 시점": "https://comic.naver.com/webtoon/list?titleId=747269",
+    "하울링": "https://comic.naver.com/webtoon/list?titleId=854794",
+    "그림으로 승부": "https://comic.naver.com/webtoon/list?titleId=853095",
+    "엄마를 만나러 가는 길": "https://comic.naver.com/webtoon/list?titleId=834369",
+    "전자오락수호대": "https://comic.naver.com/webtoon/list?titleId=637931",
+    "무한의 마법사": "https://page.kakao.com/content/60910969/",
+    "블랙 헤이즈": "https://page.kakao.com/content/65986358/",
+    "SSS급 죽어야 사는 헌터": "https://page.kakao.com/content/56243215/",
+    "천재 궁수의 스트리밍": "https://page.kakao.com/content/64007563/",
+    "만렙 플레이어의 100번째 회귀": "https://page.kakao.com/content/62916616/",
+    "성자는 개뿔, 현대의학의 힘이다": "https://page.kakao.com/content/59422125/",
+    "월스트리트 천재의 시한부 투자법": "https://comic.naver.com/webtoon/list?titleId=854407",
+    "백작가의 비밀스런 시녀님": "https://comic.naver.com/webtoon/list?titleId=830106",
+    "벙커의 낮": "https://comic.naver.com/webtoon/list?titleId=846643",
+    "세림의 철칙": "https://comic.naver.com/webtoon/list?titleId=852516",
+    "연상녀 클럽": "https://comic.naver.com/webtoon/list?titleId=851476",
+    "완벽한 선배의 Hide!": "https://comic.naver.com/webtoon/list?titleId=849742",
+    "해일주의보": "https://comic.naver.com/webtoon/list?titleId=853833",
+    "비공식 CC": "https://comic.naver.com/webtoon/list?titleId=851431",
+    "1인칭 혈육시점": "https://comic.naver.com/webtoon/list?titleId=850236",
+    "사랑이 끝나면 네가 끝난다": "https://comic.naver.com/webtoon/list?titleId=849864",
+    "인소의 법칙": "https://page.kakao.com/content/52610652/",
+    "남고 소년": "https://www.lezhin.com/ko/comic/highschoolboy",
+    "시맨틱 에러(개정판)": "https://ridibooks.com/books/3392000097?\\_s=search&\\_q=%EC%8B%9C%EB%A7%A8%ED%8B%B1+%EC%97%90%EB%9F%AC&\\_rdt_sid=SearchBookListWithTab&\\_rdt_idx=2",
+    "죽었는데 왜 집착하세요": "https://comic.naver.com/webtoon/list?titleId=826529",
+    "사신님과 3년 계약": "https://comic.naver.com/webtoon/list?titleId=847850",
+    "내 호수에 가둔 인어": "https://comic.naver.com/webtoon/list?titleId=834391",
+    "엄마가 계약결혼 했다": "https://page.kakao.com/content/59882406/",
+    "이번 생은 가주가 되겠습니다": "https://page.kakao.com/content/56566288/",
+    "사랑은 좀비를 찢고": "https://comic.naver.com/webtoon/list?titleId=854591",
+    "정글쥬스": "https://comic.naver.com/webtoon/list?titleId=762279",
+    "싸움배달": "https://comic.naver.com/webtoon/list?titleId=850079",
+    "레디액션": "https://comic.naver.com/webtoon/list?titleId=855128",
+    "은퇴한 킬러는 힐링하고 싶다": "https://page.kakao.com/content/70268713/",
+    "악마에 입문했습니다! 이루마 군": "https://page.kakao.com/content/52542095/",
+    "엔드와 세이브": "https://page.kakao.com/content/55281534/",
+    "흡혈귀는 툭하면 죽는다": "https://page.kakao.com/content/61388860/",
+    "44교시 생존수업": "https://comic.naver.com/webtoon/list?titleId=836848",
+    "쪽팔려 게임": "https://comic.naver.com/webtoon/list?titleId=847135",
+    "똑 닮은 딸": "https://comic.naver.com/webtoon/list?titleId=774866",
+    "제물 투표": "https://comic.naver.com/webtoon/list?titleId=850211",
+    "귀촌리": "https://comic.naver.com/webtoon/list?titleId=822573",
+    "모닥불 친구들": "https://comic.naver.com/webtoon/list?titleId=837439",
+    "유령의 노래": "https://comic.naver.com/webtoon/list?titleId=823239"
 }
 
 all_titles = list(dict.fromkeys(
@@ -36,6 +135,16 @@ all_titles = list(dict.fromkeys(
     for titles in webtoon_data.values()
     for title in titles
 ))
+
+# ── 저작권 및 출처 안내 ──
+# 작품 제목과 장르 정보는 소개·분류 목적으로 기재합니다.
+# 웹툰 원작의 이미지·표지·내용을 무단 복제하지 않습니다.
+COPYRIGHT_NOTICE = (
+    "이 사이트는 웹툰을 소개하고 분류하기 위한 비공식 개인 프로젝트입니다. "
+    "웹툰 이미지와 표지는 사용하지 않으며, 작품명과 장르를 텍스트로 소개하고 공식 플랫폼 링크를 제공합니다. "
+    "작품의 저작권 및 관련 권리는 각 작품의 작가와 권리자에게 있습니다. "
+    "본 사이트는 웹툰 플랫폼과 공식 제휴 관계가 없습니다."
+)
 
 # ── 디자인 ──
 st.markdown("""
@@ -190,6 +299,17 @@ div[data-testid="stTextInput"] input {
     font-size: 12px;
 }
 
+.copyright {
+    background: #f7f3e4;
+    border: 1px solid #a4b596;
+    border-left: 5px solid #526b49;
+    padding: 16px 20px;
+    margin-top: 24px;
+    color: #596b50;
+    font-size: 13px;
+    line-height: 1.9;
+}
+
 @media (max-width: 600px) {
     .poster { padding: 28px 14px; }
     .eyebrow { letter-spacing: 2px; }
@@ -315,6 +435,10 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
+today_url = webtoon_links.get(st.session_state.main_daily_pick)
+if today_url:
+    st.link_button("공식 플랫폼에서 작품 보기 ↗", today_url, use_container_width=True)
+
 if st.button("↻ 다른 작품 추천받기", use_container_width=True):
     candidates = [
         title for title in all_titles
@@ -346,14 +470,16 @@ if query.strip():
         for title in titles
         if query.strip().lower() in title.lower()
     ]
-
-    # 동일한 작품이 여러 장르에 걸쳐 표시되면 첫 결과만 남김
     matches = list(dict.fromkeys(matches))
 
     if matches:
         st.markdown("##### 검색 결과")
         for genre, title in matches:
-            st.markdown(f"- **{title}**　`{genre}`")
+            url = webtoon_links.get(title)
+            if url:
+                st.markdown(f"- **[{title}]({url})**　`{genre}`")
+            else:
+                st.markdown(f"- **{title}**　`{genre}`")
     else:
         st.info("등록된 목록에서 찾지 못했어요. 다른 검색어를 입력해 보세요.")
 
@@ -365,15 +491,23 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 info1, info2, info3 = st.columns(3)
-
 info1.metric("등록 장르", f"{len(webtoon_data):02d}")
 info2.metric("등록 작품", f"{len(all_titles)}종")
 info3.metric("추천 시스템", "ONLINE")
 
 st.caption(
-    "※ 작품 수는 메인 페이지에 등록된 예시 데이터 기준입니다. "
-    "실시간 플랫폼 순위와는 다를 수 있습니다."
+    "※ 작품 수는 조사해 등록한 목록 기준입니다. "
+    "공식 플랫폼 링크는 작품 페이지로 연결되며, 실시간 순위와는 다를 수 있습니다."
 )
+
+# ── 저작권 안내 ──
+st.markdown(f"""
+<div class="copyright">
+    <strong>저작권 및 출처 안내</strong><br>
+    {COPYRIGHT_NOTICE}<br>
+    작품 감상은 각 작품의 공식 플랫폼을 이용해 주세요.
+</div>
+""", unsafe_allow_html=True)
 
 st.markdown("""
 <div class="footer">
