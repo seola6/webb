@@ -7,34 +7,263 @@ st.set_page_config(
     layout="wide"
 )
 
-# ── 빈티지 아카이브 디자인 ──
+# ── 낡은 찌라시 / 전단지 디자인 ──
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap');
-.stApp { background-color: #e9e3d2; color: #292c20; font-family: 'Gowun Batang', serif; }
-.block-container { max-width: 1050px; padding-top: 2rem; padding-bottom: 3rem; }
-.archive-header { background: #354637; color: #f2ead7; padding: 32px 28px; border: 3px double #d5c7a4; outline: 1px solid #354637; outline-offset: 5px; text-align: center; margin-bottom: 32px; }
-.archive-header .small { font-size: 12px; letter-spacing: 4px; color: #d5c7a4; }
-.archive-header h1 { color: #f2ead7; font-size: clamp(30px, 5vw, 52px); letter-spacing: 3px; margin: 12px 0; }
-.archive-header p { color: #e1d7bd; font-size: 14px; }
-.notice { background: #f8f2e4; border: 1px solid #8b8066; padding: 18px 22px; margin: 15px 0 22px 0; box-shadow: 4px 4px 0 #d1c7b1; }
-.notice-title { font-size: 12px; letter-spacing: 3px; color: #8c4236; font-weight: bold; }
-.poster { background: #f8f2e4; border: 1px solid #a69a7d; padding: 20px; box-shadow: 5px 5px 0 #d1c7b1; margin: 10px 0; }
-.poster-stamp { display: inline-block; color: #9b4538; border: 2px solid #9b4538; padding: 3px 9px; font-size: 12px; transform: rotate(-3deg); letter-spacing: 2px; }
-.result-title { font-size: 30px; font-weight: bold; color: #354637; margin: 12px 0; }
-.result-description { font-size: 16px; line-height: 1.9; color: #454537; }
-.footer-note { text-align: center; color: #716b58; font-size: 12px; border-top: 1px dashed #a69a7d; padding-top: 18px; margin-top: 38px; }
-div.stButton > button, div.stLinkButton > a { background: #354637; color: #f8f2e4; border: 1px solid #354637; border-radius: 0; padding: 10px 22px; font-family: 'Gowun Batang', serif; }
-div.stButton > button:hover, div.stLinkButton > a:hover { background: #52664e; color: white; border-color: #52664e; }
-div[data-baseweb="select"] > div { background: #f8f2e4; border-color: #a69a7d; border-radius: 0; }
+
+:root {
+    --paper: #e7dcc0;
+    --cream: #f6edd8;
+    --ink: #26372d;
+    --green: #304635;
+    --red: #a33d30;
+    --muted: #786d58;
+    --line: #9d8d6d;
+}
+
+.stApp {
+    background-color: var(--paper);
+    background-image:
+        radial-gradient(#75694d 0.55px, transparent 0.7px),
+        repeating-linear-gradient(
+            0deg,
+            rgba(65, 51, 31, 0.025) 0px,
+            rgba(65, 51, 31, 0.025) 1px,
+            transparent 1px,
+            transparent 4px
+        );
+    background-size: 6px 6px, auto;
+    color: var(--ink);
+    font-family: 'Gowun Batang', serif;
+}
+
+.block-container {
+    max-width: 1120px;
+    padding-top: 2rem;
+    padding-bottom: 3rem;
+}
+
+/* 왼쪽 사이드바 */
+[data-testid="stSidebar"] {
+    background-color: var(--green);
+    border-right: 5px solid var(--red);
+}
+[data-testid="stSidebar"] > div:first-child {
+    background: transparent;
+}
+[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] {
+    color: var(--cream);
+}
+[data-testid="stSidebar"] a {
+    color: var(--cream) !important;
+    border-radius: 0 !important;
+    border-bottom: 1px dashed rgba(246, 237, 216, 0.3);
+    padding: 10px 8px !important;
+    margin: 3px 0 !important;
+}
+[data-testid="stSidebar"] a:hover {
+    background: rgba(246, 237, 216, 0.12) !important;
+}
+[data-testid="stSidebar"] [aria-current="page"] {
+    background: var(--red) !important;
+    color: var(--cream) !important;
+}
+
+/* 상단 찌라시 헤드라인 */
+.archive-header {
+    position: relative;
+    background: var(--green);
+    color: var(--cream);
+    padding: 38px 25px 32px;
+    border: 3px double var(--cream);
+    outline: 2px solid var(--ink);
+    outline-offset: 4px;
+    text-align: center;
+    margin: 8px 0 32px;
+    box-shadow: 9px 9px 0 rgba(38, 55, 45, 0.22);
+    transform: rotate(-0.2deg);
+}
+.archive-header .small {
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: #dfcba1;
+    font-weight: bold;
+}
+.archive-header h1 {
+    color: var(--cream);
+    font-family: Impact, 'Arial Black', sans-serif;
+    font-size: clamp(30px, 5vw, 57px);
+    font-weight: 1000;
+    letter-spacing: 1px;
+    line-height: 1.1;
+    margin: 20px 0;
+    text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.2);
+}
+.archive-header p {
+    color: #e6d7b8;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/* 공지 전단 */
+.notice {
+    background: var(--cream);
+    border: 2px solid var(--ink);
+    padding: 18px 22px;
+    margin: 18px 0 25px;
+    box-shadow: 5px 5px 0 #c7b99a;
+    position: relative;
+}
+.notice-title {
+    display: inline-block;
+    font-family: Georgia, serif;
+    font-size: 12px;
+    letter-spacing: 3px;
+    color: var(--red);
+    font-weight: bold;
+    border-bottom: 2px solid var(--red);
+    padding-bottom: 4px;
+    margin-bottom: 8px;
+}
+
+/* 섹션 제목 */
+.section-title {
+    background: var(--green);
+    color: var(--cream);
+    border-left: 8px solid var(--red);
+    padding: 9px 13px;
+    margin: 30px 0 16px;
+    font-family: Impact, 'Arial Black', sans-serif;
+    font-size: 21px;
+    letter-spacing: 1px;
+    box-shadow: 4px 4px 0 #c7b99a;
+}
+
+/* 추천 작품 종이 */
+.poster {
+    background: var(--cream);
+    border: 2px solid var(--ink);
+    outline: 1px dashed var(--line);
+    outline-offset: -7px;
+    padding: 24px;
+    box-shadow: 7px 7px 0 #c7b99a;
+    margin: 12px 0 17px;
+    position: relative;
+    transform: rotate(-0.15deg);
+}
+.poster-stamp {
+    display: inline-block;
+    color: var(--red);
+    border: 3px solid var(--red);
+    padding: 5px 10px;
+    font-family: Georgia, serif;
+    font-size: 11px;
+    font-weight: bold;
+    transform: rotate(-4deg);
+    letter-spacing: 2px;
+}
+.result-title {
+    font-family: Impact, 'Arial Black', sans-serif;
+    font-size: clamp(27px, 4vw, 38px);
+    font-weight: 900;
+    color: var(--green);
+    margin: 18px 0 12px;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 12px;
+}
+.result-description {
+    font-size: 15px;
+    line-height: 2;
+    color: #454537;
+}
+
+/* 버튼 */
+div.stButton > button,
+div.stLinkButton > a {
+    background: var(--red);
+    color: var(--cream);
+    border: 2px solid var(--ink);
+    border-radius: 0;
+    padding: 10px 18px;
+    font-family: 'Gowun Batang', serif;
+    font-weight: bold;
+    box-shadow: 4px 4px 0 var(--ink);
+    transition: 0.12s ease;
+}
+div.stButton > button:hover,
+div.stLinkButton > a:hover {
+    background: var(--green);
+    color: white;
+    border-color: var(--ink);
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 var(--ink);
+}
+
+/* 선택창 */
+div[data-baseweb="select"] > div,
+div[data-testid="stTextInput"] input {
+    background: var(--cream);
+    border: 2px solid var(--ink);
+    border-radius: 0;
+}
+
+/* 하단 안내 */
+.footer-note {
+    text-align: center;
+    color: var(--muted);
+    font-family: Georgia, serif;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    border-top: 3px double var(--ink);
+    border-bottom: 1px solid var(--ink);
+    padding: 15px 5px;
+    margin-top: 40px;
+}
+
+@media (max-width: 600px) {
+    .archive-header { padding: 28px 14px; }
+    .archive-header .small { letter-spacing: 1px; }
+    .poster { padding: 20px 15px; }
+}
 </style>
+""", unsafe_allow_html=True)
+
+st.sidebar.markdown("""
+<div style="
+    background:#26372d;
+    color:#f6edd8;
+    border:2px dashed #e7dcc0;
+    padding:18px 8px;
+    text-align:center;
+    margin:8px 0 24px;
+    transform:rotate(-1deg);
+">
+    <div style="font-size:10px;letter-spacing:3px;">
+        THE UNOFFICIAL PAPER
+    </div>
+    <div style="
+        font-family:Impact,Georgia,serif;
+        font-size:26px;
+        font-weight:900;
+        line-height:1.1;
+        color:#e5b5a4;
+        margin:12px 0;
+    ">
+        WEBTOON<br>ARCHIVE
+    </div>
+    <div style="font-size:10px;letter-spacing:2px;">
+        VOL. 001 · EST. 2026
+    </div>
+</div>
 """, unsafe_allow_html=True)
 
 st.markdown("""
 <div class="archive-header">
-  <div class="small">WEBTOON ARCHIVE · COLLECTION NO. 01</div>
-  <h1>WEBTOON RECOMMENDATION</h1>
-  <p>취향에 맞는 작품을 찾아보는 작은 웹툰 자료실</p>
+  <div class="small">WEBTOON ARCHIVE · UNOFFICIAL PAPER NO. 01</div>
+  <h1>WEBTOON<br>RECOMMENDATION</h1>
+  <p>오늘의 취향을 찾아드립니다 · 작품 자료실 제1호</p>
 </div>
 <div class="notice">
   <div class="notice-title">ARCHIVE NOTE</div>
