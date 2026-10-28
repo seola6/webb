@@ -1,6 +1,7 @@
 
 import streamlit as st
 import random
+import html
 
 st.set_page_config(
     page_title="CHARACTER FACTORY",
@@ -87,8 +88,7 @@ st.markdown("""
     margin: 28px 0 18px;
 }
 .stTextInput label,
-.stSelectbox label,
-.stRadio label {
+.stSelectbox label {
     color: #c4ff38 !important;
     font-weight: bold;
 }
@@ -269,7 +269,15 @@ if st.button(
         color, hair, genre
     )
 
+# 이전 버전의 캐릭터 데이터도 안전하게 처리
 result = st.session_state.get("character_result")
+
+if result and not all(
+    key in result
+    for key in ["name", "gender", "job", "hair", "genre", "color", "rarity"]
+):
+    del st.session_state["character_result"]
+    result = None
 
 # ── RESULT ──
 if result:
@@ -281,27 +289,27 @@ if result:
     st.markdown(f"""
     <div class="result-card">
         <div class="result-banner">★ PLAYER DATA : UNLOCKED ★</div>
-        <div class="character-name">{result["name"]}</div>
-        <div class="character-job">▶ 직업 : {result["job"]}</div>
+        <div class="character-name">{html.escape(str(result["name"]))}</div>
+        <div class="character-job">▶ 직업 : {html.escape(str(result["job"]))}</div>
         <div class="stat-line">
             <span class="stat-label">GENDER //</span>
-            {result["gender"]}
+            {html.escape(str(result["gender"]))}
         </div>
         <div class="stat-line">
             <span class="stat-label">HAIR STYLE //</span>
-            {result["hair"]}
+            {html.escape(str(result["hair"]))}
         </div>
         <div class="stat-line">
             <span class="stat-label">WORLD //</span>
-            {result["genre"]}
+            {html.escape(str(result["genre"]))}
         </div>
         <div class="stat-line">
             <span class="stat-label">COLOR CODE //</span>
-            {result["color"]}
+            {html.escape(str(result["color"]))}
         </div>
         <div class="stat-line">
             <span class="stat-label">RARITY //</span>
-            {result["rarity"]}
+            {html.escape(str(result["rarity"]))}
         </div>
     </div>
     """, unsafe_allow_html=True)
