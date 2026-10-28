@@ -230,6 +230,90 @@ div[data-testid="stTextInput"] input {
 </style>
 """, unsafe_allow_html=True)
 
+# ── 텍스트 어드벤처 전용 연출 ──
+st.markdown("""
+<style>
+.story-screen {
+    background: #171d18;
+    color: #d9d4bd;
+    border: 2px solid #a33d30;
+    outline: 1px dashed #8c8065;
+    outline-offset: 5px;
+    padding: 25px;
+    margin: 16px 0 24px;
+    box-shadow: 9px 9px 0 rgba(38, 25, 20, .22);
+    font-family: 'Courier New', monospace;
+    line-height: 1.9;
+}
+.story-kicker {
+    color: #d46c55;
+    font-size: 11px;
+    letter-spacing: 3px;
+    border-bottom: 1px dashed #726650;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+.story-line {
+    color: #e8dfc7;
+    font-size: 16px;
+    margin: 8px 0;
+}
+.story-dialogue {
+    color: #a9c09a;
+    border-left: 3px solid #a33d30;
+    padding: 8px 12px;
+    margin: 15px 0;
+    background: rgba(246, 237, 216, .045);
+}
+.story-warning {
+    color: #d46c55;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+.story-status {
+    display: inline-block;
+    border: 1px solid #8c8065;
+    padding: 4px 8px;
+    color: #d9d4bd;
+    font-size: 10px;
+    letter-spacing: 2px;
+    margin: 3px 5px 3px 0;
+}
+.story-choice-label {
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: #a33d30;
+    font-weight: bold;
+    margin: 18px 0 8px;
+}
+.story-result {
+    background: #f6edd8;
+    color: #26372d;
+    border: 3px double #304635;
+    padding: 24px;
+    margin: 16px 0;
+    box-shadow: 7px 7px 0 #c7b99a;
+}
+.story-result small {
+    color: #a33d30;
+    letter-spacing: 3px;
+    font-weight: bold;
+}
+.story-result h2 {
+    color: #304635;
+    font-family: Impact, 'Arial Black', sans-serif;
+    font-size: 32px;
+    margin: 12px 0;
+}
+div.stButton > button {
+    text-align: left;
+    white-space: normal;
+    min-height: 48px;
+}
+</style>
+""", unsafe_allow_html=True)
+
+
 st.sidebar.markdown("""
 <div style="
     background:#26372d;
@@ -345,160 +429,197 @@ webtoon_links = {
 }
 
 
-# ── 선택지형 웹툰 탐색 게임 ──
+# ── 분기형 텍스트 어드벤처 ──
 st.markdown("""
-<div class="section-title">FILE 001 / 미확인 자료 열람실</div>
+<div class="section-title">NIGHT SHIFT / 야간 자료실</div>
 <div class="notice">
-  <div class="notice-title">CASE FILE · 열람 안내</div>
-  자료실에 도착했습니다. 조사할 기록을 선택하고, 발견한 단서를 따라가세요.
-  마지막에 선택한 기록과 어울리는 웹툰 한 편이 공개됩니다.
+  <div class="notice-title">긴급 열람 공지 · 03:17</div>
+  이 페이지는 추천 서비스가 아닙니다.<br>
+  폐쇄된 자료실에서 회수한 기록을 재생합니다. 선택에 따라 기록의 내용과 발견되는 작품이 달라집니다.
 </div>
 """, unsafe_allow_html=True)
 
-cases = {
-    "정체불명의 세계": {
-        "subtitle": "현실과 다른 규칙이 존재하는 세계의 기록",
-        "clues": ["숨겨진 능력", "낯선 세계의 비밀", "강해지는 주인공"],
-        "genres": ["판타지"],
+# Each ending is tied to a genre pool from the existing user's webtoon catalog.
+# Narrative branches change the eligible genre pool and scene text.
+story_paths = {
+    "terminal": {
+        "title": "꺼진 모니터",
+        "scene": "자료실 구석의 모니터가 혼자 켜진다. 화면에는 존재하지 않는 파일 번호가 떠 있다.",
+        "dialogue": "모니터: \"기록을 열람하시겠습니까? 이미 한 번 열람하셨습니다.\"",
+        "choices": [
+            ("파일을 강제로 연다", "force"),
+            ("전원을 뽑는다", "unplug"),
+        ],
     },
-    "수상한 관계": {
-        "subtitle": "인물 사이에 숨겨진 감정과 약속에 관한 기록",
-        "clues": ["오래된 약속", "복잡하게 얽힌 감정", "청춘의 순간"],
-        "genres": ["로맨스", "BL", "드라마"],
+    "force": {
+        "title": "파일 강제 열람",
+        "scene": "화면에 검은 창이 여러 개 겹친다. 마지막 창 하나만 읽을 수 있다.",
+        "dialogue": "알 수 없는 발신자: \"당신은 이야기 속에서 무엇을 찾습니까?\"",
+        "choices": [
+            ("현실을 벗어난 세계", "fantasy"),
+            ("누군가의 감춰진 마음", "romance"),
+        ],
     },
-    "위험한 사건": {
-        "subtitle": "누군가 감추고 있는 사건과 생존 기록",
-        "clues": ["생존을 위한 선택", "수상한 인물", "정면 돌파"],
-        "genres": ["스릴러", "액션"],
+    "unplug": {
+        "title": "전원 차단",
+        "scene": "모니터는 꺼졌지만 프린터가 움직인다. 종이에는 짧은 문장이 찍혀 있다.",
+        "dialogue": "인쇄된 문장: \"뒤돌아보지 말 것. 특히 소리가 들려도.\"",
+        "choices": [
+            ("프린터 속 종이를 읽는다", "thriller"),
+            ("자료실 출구를 찾는다", "action"),
+        ],
     },
-    "예측 불가": {
-        "subtitle": "분류표만으로는 설명할 수 없는 미확인 기록",
-        "clues": ["뜻밖의 반전", "독특한 설정", "아무 단서나 믿어 보기"],
-        "genres": list(webtoon_data.keys()),
+    "fantasy": {
+        "title": "분류 오류: 세계",
+        "scene": "파일 안에는 지도에도 없는 장소와, 현실에는 존재하지 않는 규칙이 적혀 있다.",
+        "dialogue": "기록 담당자: \"이 세계의 규칙을 믿으시겠습니까?\"",
+        "choices": [
+            ("규칙을 믿고 들어간다", "ending_fantasy"),
+            ("규칙을 의심하고 조사한다", "ending_drama"),
+        ],
+    },
+    "romance": {
+        "title": "발신인 없는 편지",
+        "scene": "오래된 봉투가 열린다. 편지에는 이름이 지워진 채 문장 하나만 남아 있다.",
+        "dialogue": "편지: \"끝났다고 생각한 순간부터 시작되는 마음도 있다.\"",
+        "choices": [
+            ("편지를 보관한다", "ending_romance"),
+            ("뒷면의 낙서를 확인한다", "ending_bl"),
+        ],
+    },
+    "thriller": {
+        "title": "출력된 경고문",
+        "scene": "프린터는 같은 문장을 세 번 출력한다. 세 번째 종이에는 새로운 글자가 나타난다.",
+        "dialogue": "경고문: \"이 사건의 기록자는 아직 퇴근하지 않았다.\"",
+        "choices": [
+            ("사건 기록을 조사한다", "ending_thriller"),
+            ("문을 열고 복도로 나간다", "ending_action"),
+        ],
+    },
+    "action": {
+        "title": "잠긴 출구",
+        "scene": "출구의 자물쇠에는 숫자 대신 오래된 사건 번호가 새겨져 있다.",
+        "dialogue": "스피커: \"문을 열려면 물러서지 않는 이야기를 선택하십시오.\"",
+        "choices": [
+            ("정면으로 돌파한다", "ending_action"),
+            ("숨겨진 통로를 찾는다", "ending_fantasy"),
+        ],
     },
 }
 
-# Session state setup
-if "archive_game_stage" not in st.session_state:
-    st.session_state.archive_game_stage = 0
-if "archive_game_case" not in st.session_state:
-    st.session_state.archive_game_case = None
-if "archive_game_clue" not in st.session_state:
-    st.session_state.archive_game_clue = None
-if "archive_game_result" not in st.session_state:
-    st.session_state.archive_game_result = None
-if "archive_game_genre" not in st.session_state:
-    st.session_state.archive_game_genre = None
+endings = {
+    "ending_fantasy": ("판타지", "세계의 바깥", "현실의 규칙을 벗어난 기록이 발견되었습니다."),
+    "ending_romance": ("로맨스", "편지의 수신인", "감정과 관계를 기록한 문서가 발견되었습니다."),
+    "ending_bl": ("BL", "지워진 이름", "관계의 이면을 기록한 문서가 발견되었습니다."),
+    "ending_thriller": ("스릴러", "사건 보고서", "수상한 사건의 기록이 발견되었습니다."),
+    "ending_action": ("액션", "잠긴 문 너머", "대결과 돌파의 기록이 발견되었습니다."),
+    "ending_drama": ("드라마", "남겨진 기록", "인물의 선택과 성장을 기록한 문서가 발견되었습니다."),
+}
 
-def reset_archive_game():
-    st.session_state.archive_game_stage = 0
-    st.session_state.archive_game_case = None
-    st.session_state.archive_game_clue = None
-    st.session_state.archive_game_result = None
-    st.session_state.archive_game_genre = None
+if "story_node" not in st.session_state:
+    st.session_state.story_node = "terminal"
+if "story_history" not in st.session_state:
+    st.session_state.story_history = []
+if "story_ending_item" not in st.session_state:
+    st.session_state.story_ending_item = None
+if "story_ending_genre" not in st.session_state:
+    st.session_state.story_ending_genre = None
 
-stage = st.session_state.archive_game_stage
+def restart_story():
+    st.session_state.story_node = "terminal"
+    st.session_state.story_history = []
+    st.session_state.story_ending_item = None
+    st.session_state.story_ending_genre = None
 
-if stage == 0:
-    st.markdown('<div class="section-title">01 / 조사할 기록 선택</div>', unsafe_allow_html=True)
-    st.write("어떤 종류의 기록부터 열람할까요?")
-    case_cols = st.columns(2)
-    case_names = list(cases.keys())
-    for index, case_name in enumerate(case_names):
-        with case_cols[index % 2]:
-            st.markdown(f"""
-            <div class="poster">
-                <span class="poster-stamp">FILE NO. 0{index + 1}</span>
-                <div class="result-title" style="font-size:25px;">{case_name}</div>
-                <div class="result-description">{cases[case_name]["subtitle"]}</div>
-            </div>
-            """, unsafe_allow_html=True)
-            if st.button(f"이 기록 조사하기 ↗", key=f"case_{index}", use_container_width=True):
-                st.session_state.archive_game_case = case_name
-                st.session_state.archive_game_stage = 1
-                st.rerun()
+node = st.session_state.story_node
 
-elif stage == 1:
-    case_name = st.session_state.archive_game_case
-    case_info = cases[case_name]
-    st.markdown('<div class="section-title">02 / 단서 수집</div>', unsafe_allow_html=True)
+# Progress strip
+st.markdown(
+    f'<span class="story-status">SESSION 09</span>'
+    f'<span class="story-status">NODE: {node.upper()}</span>'
+    f'<span class="story-status">LOGS: {len(st.session_state.story_history):02d}</span>',
+    unsafe_allow_html=True
+)
+
+if node in story_paths:
+    current = story_paths[node]
     st.markdown(f"""
-    <div class="poster">
-      <span class="poster-stamp">OPENED FILE</span>
-      <div class="result-title">{case_name}</div>
-      <div class="result-description">{case_info["subtitle"]}</div>
+    <div class="story-screen">
+      <div class="story-kicker">UNKNOWN SYSTEM / {current["title"].upper()}</div>
+      <div class="story-line">▸ {current["scene"]}</div>
+      <div class="story-dialogue">{current["dialogue"]}</div>
+      <div class="story-warning">[ 입력을 기다리는 중... ]</div>
     </div>
     """, unsafe_allow_html=True)
-    st.write("기록 사이에서 어떤 단서를 조사할까요?")
-    clue_cols = st.columns(len(case_info["clues"]))
-    for index, clue in enumerate(case_info["clues"]):
-        with clue_cols[index]:
-            if st.button(clue, key=f"clue_{index}", use_container_width=True):
-                st.session_state.archive_game_clue = clue
-                eligible_genres = case_info["genres"]
-                candidates = [
-                    (genre, item)
-                    for genre in eligible_genres
-                    for item in webtoon_data.get(genre, [])
-                ]
-                if not candidates:
-                    candidates = [
+
+    st.markdown('<div class="story-choice-label">▼ 다음 행동을 선택하십시오</div>', unsafe_allow_html=True)
+    for index, (label, next_node) in enumerate(current["choices"]):
+        if st.button(f"▸ {label}", key=f"story_{node}_{index}", use_container_width=True):
+            st.session_state.story_history.append({
+                "scene": current["title"],
+                "choice": label,
+            })
+            st.session_state.story_node = next_node
+            if next_node in endings:
+                genre_name, _, _ = endings[next_node]
+                candidates = webtoon_data.get(genre_name, [])
+                if candidates:
+                    st.session_state.story_ending_item = random.choice(candidates)
+                    st.session_state.story_ending_genre = genre_name
+                else:
+                    all_candidates = [
                         (genre, item)
                         for genre, items in webtoon_data.items()
                         for item in items
                     ]
-                selected_genre, selected_item = random.choice(candidates)
-                st.session_state.archive_game_genre = selected_genre
-                st.session_state.archive_game_result = selected_item
-                st.session_state.archive_game_stage = 2
-                st.rerun()
-
-    if st.button("← 기록 선택으로 돌아가기", key="back_to_cases"):
-        reset_archive_game()
-        st.rerun()
+                    selected_genre, selected_item = random.choice(all_candidates)
+                    st.session_state.story_ending_item = selected_item
+                    st.session_state.story_ending_genre = selected_genre
+            st.rerun()
 
 else:
-    case_name = st.session_state.archive_game_case
-    clue = st.session_state.archive_game_clue
-    item = st.session_state.archive_game_result
-    genre_name = st.session_state.archive_game_genre
-
-    st.markdown('<div class="section-title">03 / 자료 발견 보고서</div>', unsafe_allow_html=True)
+    genre_name, ending_title, ending_text = endings[node]
+    item = st.session_state.story_ending_item
     st.markdown(f"""
-    <div class="notice">
-      <div class="notice-title">ARCHIVE REPORT · 조사 완료</div>
-      조사 기록: <strong>{case_name}</strong><br>
-      확보한 단서: <strong>{clue}</strong><br>
-      분류 결과: <strong>{genre_name}</strong>
-    </div>
-    <div class="poster">
-      <span class="poster-stamp">RECORD FOUND</span>
-      <div class="result-title">{item["title"]}</div>
-      <div class="result-description">{item["description"]}</div>
+    <div class="story-screen">
+      <div class="story-kicker">END OF FILE / {ending_title.upper()}</div>
+      <div class="story-line">{ending_text}</div>
+      <div class="story-dialogue">시스템: \"기록을 복구했습니다. 아래 자료는 조사 결과에 따라 분류되었습니다.\"</div>
+      <div class="story-warning">[ 열람 가능한 기록이 발견되었습니다 ]</div>
     </div>
     """, unsafe_allow_html=True)
 
-    link = webtoon_links.get(item["title"])
-    if link:
-        st.link_button("공식 작품 페이지 열람 ↗", link, use_container_width=True)
-    else:
-        st.info("이 작품의 공식 링크는 아직 등록되지 않았어요.")
+    if item:
+        st.markdown(f"""
+        <div class="story-result">
+          <small>RECOVERED WEBTOON · {st.session_state.story_ending_genre}</small>
+          <h2>{item["title"]}</h2>
+          <p>{item["description"]}</p>
+        </div>
+        """, unsafe_allow_html=True)
+        link = webtoon_links.get(item["title"])
+        if link:
+            st.link_button("기록 원본 열람 ↗", link, use_container_width=True)
+        else:
+            st.info("이 작품의 공식 링크는 아직 등록되지 않았어요.")
 
-    left_action, right_action = st.columns(2)
-    with left_action:
-        if st.button("다른 단서 조사하기", key="try_again", use_container_width=True):
-            st.session_state.archive_game_stage = 1
-            st.session_state.archive_game_clue = None
-            st.session_state.archive_game_result = None
-            st.session_state.archive_game_genre = None
+    st.markdown('<div class="story-choice-label">조사 기록</div>', unsafe_allow_html=True)
+    for entry in st.session_state.story_history:
+        st.markdown(f"- **{entry['scene']}** — {entry['choice']}")
+
+    left, right = st.columns(2)
+    with left:
+        if st.button("같은 결말에서 다른 작품 발견", use_container_width=True):
+            candidates = webtoon_data.get(st.session_state.story_ending_genre, [])
+            if candidates:
+                st.session_state.story_ending_item = random.choice(candidates)
             st.rerun()
-    with right_action:
-        if st.button("새 기록부터 조사하기", key="new_case", use_container_width=True):
-            reset_archive_game()
+    with right:
+        if st.button("처음부터 다시 조사", use_container_width=True):
+            restart_story()
             st.rerun()
 
 st.markdown(
-    '<div class="footer-note">WEBTOON ARCHIVE · UNOFFICIAL PAPER · FILE YOUR FINDINGS</div>',
+    '<div class="footer-note">WEBTOON ARCHIVE · UNOFFICIAL PAPER · DO NOT TRUST EVERY FILE</div>',
     unsafe_allow_html=True
 )
-
