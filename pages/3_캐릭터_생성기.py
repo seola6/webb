@@ -1,3 +1,4 @@
+
 import streamlit as st
 import random
 
@@ -29,7 +30,6 @@ st.markdown("""
     padding: 28px 20px;
     text-align: center;
     margin: 8px 0 30px;
-    position: relative;
 }
 .arcade-mini {
     color: #c4ff38;
@@ -57,7 +57,6 @@ st.markdown("""
     padding: 18px;
     border: 3px dashed #ff3eaa;
     box-shadow: 5px 5px 0 #c4ff38;
-    transform: rotate(-0.5deg);
     margin: 15px 0 25px;
 }
 .flyer-tag {
@@ -67,7 +66,6 @@ st.markdown("""
     padding: 5px 9px;
     font-weight: bold;
     font-size: 12px;
-    transform: rotate(-2deg);
 }
 .flyer h3 {
     font-family: 'Press Start 2P', monospace;
@@ -88,7 +86,9 @@ st.markdown("""
     padding-bottom: 10px;
     margin: 28px 0 18px;
 }
-.stTextInput label, .stSelectbox label {
+.stTextInput label,
+.stSelectbox label,
+.stRadio label {
     color: #c4ff38 !important;
     font-weight: bold;
 }
@@ -100,7 +100,7 @@ div[data-baseweb="select"] > div {
 }
 .stTextInput input {
     background: #202027;
-    color: #ffffff;
+    color: white;
     border: 1px solid #00f5ff;
     border-radius: 0;
 }
@@ -117,7 +117,7 @@ div.stButton > button {
 div.stButton > button:hover {
     background: #c4ff38;
     color: #101014;
-    border-color: #ffffff;
+    border-color: white;
     box-shadow: 2px 2px 0 #ff3eaa;
 }
 .result-card {
@@ -126,6 +126,7 @@ div.stButton > button:hover {
     box-shadow: 6px 6px 0 #ff3eaa;
     padding: 22px;
     margin: 10px 0 25px;
+    overflow-wrap: anywhere;
 }
 .result-banner {
     color: #101014;
@@ -141,7 +142,6 @@ div.stButton > button:hover {
     color: #ff3eaa;
     font-size: 30px;
     font-weight: bold;
-    overflow-wrap: anywhere;
 }
 .character-job {
     color: #00f5ff;
@@ -186,17 +186,28 @@ st.markdown("""
     <span class="flyer-tag">긴급 전단 / SPECIAL ISSUE</span>
     <h3>▶ 나만의 캐릭터를 만들어라!</h3>
     <p>
-        당신의 취향을 입력하면 새로운 캐릭터가 출현합니다.<br>
-        이름도 직업도 랜덤! 결과는 오직 운명에 맡기세요.
+        취향에 맞는 조건을 선택하고 새로운 캐릭터를 생성하세요.<br>
+        성별과 이름, 직업은 랜덤! 결과는 오직 운명에 맡기세요.
     </p>
     <p>★ LIMITED EDITION · CHARACTER DATA CENTER ★</p>
 </div>
 """, unsafe_allow_html=True)
 
-# ── CHARACTER OPTIONS ──
-names = ["유하진", "강민", "서윤", "하린", "도현"]
-jobs = ["마법사", "기사", "학생", "헌터", "연구원"]
+# ── CHARACTER DATA ──
+names = [
+    "유하진", "강민", "서윤", "하린", "도현",
+    "윤시온", "백이안", "차유현", "한서우", "정이든",
+    "서해온", "강이현", "문시율", "류하온", "진유안"
+]
 
+jobs_by_genre = {
+    "판타지": ["마법사", "기사", "마왕의 후계자", "연금술사", "용병"],
+    "로맨스": ["대학생", "작가", "아이돌 연습생", "카페 직원", "배우"],
+    "액션": ["헌터", "격투가", "경찰", "정보원", "용병"],
+    "스릴러": ["탐정", "기자", "형사", "연구원", "목격자"]
+}
+
+# ── PLAYER CUSTOMIZATION ──
 st.markdown(
     '<div class="section-label">01 / PLAYER CUSTOMIZATION</div>',
     unsafe_allow_html=True
@@ -207,18 +218,21 @@ left, right = st.columns(2)
 with left:
     color = st.text_input(
         "▣ 좋아하는 색",
-        placeholder="예: 네온 핑크, 검정, 하늘색"
+        placeholder="예: 네온 핑크, 검정, 하늘색",
+        key="character_color"
     )
 
-    personality = st.selectbox(
-        "▣ 캐릭터 성격",
-        ["조용함", "활발함", "냉정함", "다정함", "엉뚱함"]
+    hair = st.selectbox(
+        "▣ 선호하는 머리 길이",
+        ["긴 머리", "숏컷"],
+        key="character_hair"
     )
 
 with right:
     genre = st.selectbox(
         "▣ 세계관 / 장르",
-        ["판타지", "로맨스", "액션", "스릴러"]
+        ["판타지", "로맨스", "액션", "스릴러"],
+        key="character_genre"
     )
 
     st.markdown("""
@@ -230,15 +244,30 @@ with right:
     </div>
     """, unsafe_allow_html=True)
 
-# ── GENERATE ──
-if st.button("▶ START GAME / 캐릭터 생성!", use_container_width=True):
-    st.session_state["character_result"] = {
+# ── CHARACTER GENERATOR ──
+def generate_character(color, hair, genre):
+    return {
         "name": random.choice(names),
-        "job": random.choice(jobs),
-        "personality": personality,
+        "gender": random.choice(["남성", "여성"]),
+        "job": random.choice(jobs_by_genre[genre]),
+        "hair": hair,
         "genre": genre,
-        "color": color.strip() if color.strip() else "미지정"
+        "color": color.strip() if color.strip() else "미지정",
+        "rarity": random.choices(
+            ["COMMON", "RARE", "EPIC", "LEGENDARY"],
+            weights=[55, 27, 14, 4],
+            k=1
+        )[0]
     }
+
+# ── GENERATE ──
+if st.button(
+    "▶ START GAME / 캐릭터 생성!",
+    use_container_width=True
+):
+    st.session_state["character_result"] = generate_character(
+        color, hair, genre
+    )
 
 result = st.session_state.get("character_result")
 
@@ -254,28 +283,44 @@ if result:
         <div class="result-banner">★ PLAYER DATA : UNLOCKED ★</div>
         <div class="character-name">{result["name"]}</div>
         <div class="character-job">▶ 직업 : {result["job"]}</div>
-        <div class="stat-line"><span class="stat-label">PERSONALITY //</span> {result["personality"]}</div>
-        <div class="stat-line"><span class="stat-label">WORLD //</span> {result["genre"]}</div>
-        <div class="stat-line"><span class="stat-label">COLOR CODE //</span> {result["color"]}</div>
-        <div class="stat-line"><span class="stat-label">RARITY //</span> UNKNOWN ???</div>
+        <div class="stat-line">
+            <span class="stat-label">GENDER //</span>
+            {result["gender"]}
+        </div>
+        <div class="stat-line">
+            <span class="stat-label">HAIR STYLE //</span>
+            {result["hair"]}
+        </div>
+        <div class="stat-line">
+            <span class="stat-label">WORLD //</span>
+            {result["genre"]}
+        </div>
+        <div class="stat-line">
+            <span class="stat-label">COLOR CODE //</span>
+            {result["color"]}
+        </div>
+        <div class="stat-line">
+            <span class="stat-label">RARITY //</span>
+            {result["rarity"]}
+        </div>
     </div>
     """, unsafe_allow_html=True)
 
-    st.markdown(
-        '<div class="flyer"><span class="flyer-tag">CHARACTER FILE</span>'
-        '<h3>DATA SAVED!</h3>'
-        '<p>새로운 이야기가 시작되었습니다. 다음 캐릭터도 생성해 보세요!</p></div>',
-        unsafe_allow_html=True
-    )
+    st.markdown("""
+    <div class="flyer">
+        <span class="flyer-tag">CHARACTER FILE</span>
+        <h3>DATA SAVED!</h3>
+        <p>새로운 이야기가 시작되었습니다. 다음 캐릭터도 생성해 보세요!</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-    if st.button("↻ RANDOMIZE! / 다시 뽑기", use_container_width=True):
-        st.session_state["character_result"] = {
-            "name": random.choice(names),
-            "job": random.choice(jobs),
-            "personality": personality,
-            "genre": genre,
-            "color": color.strip() if color.strip() else "미지정"
-        }
+    if st.button(
+        "↻ RANDOMIZE! / 다시 뽑기",
+        use_container_width=True
+    ):
+        st.session_state["character_result"] = generate_character(
+            color, hair, genre
+        )
         st.rerun()
 
 st.markdown("""
