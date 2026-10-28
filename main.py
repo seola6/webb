@@ -380,46 +380,277 @@ a {
 
 # 왼쪽 신문 제호
 with st.sidebar:
-    st.markdown("""
-    <div style="font-family:'Black Han Sans',sans-serif;font-size:30px;line-height:.95;
-    color:#e8dfc9;border:2px solid #b9aa8d;padding:15px 10px;transform:rotate(-1deg);">
-    WEBTOON<br>ARCHIVE
-    </div>
-    <p style="font-size:12px;line-height:1.8;color:#c7b99c!important;margin-top:16px;">
-    웹툰을 수집하고,<br>발견하고, 기록하다.<br>
-    <span style="color:#c85a4b!important;">VOL. 001 · 2026</span></p>
-    <hr>
-    """, unsafe_allow_html=True)
-    st.markdown("### ☰ 목차")
-    st.markdown("- **01** 작품 도감")
-    st.markdown("- **02** 웹툰 추천")
-    st.markdown("- **03** 요일별 랭킹")
-    st.markdown("- **04** 캐릭터 생성기")
-    st.markdown("- **05** 웹툰 룰렛")
-    st.markdown("---")
-    st.caption("COLLECT YOUR STORIES")
+  st.markdown("""
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Do+Hyeon&display=swap');
 
-st.markdown("""
-<div class="topline"><span>지금도 누군가의 마음을 두드리는, 그 이야기들</span><span>THE INDEPENDENT WEBTOON PAPER</span></div>
-<div class="poster">
-  <div class="poster-side">
-    <div class="poster-kicker">웹툰 기록 보관소</div>
-    <div style="font-size:25px;font-weight:800;line-height:1.25;margin:12px 0;">오늘의 이야기,<br>오래도록 기록하다.</div>
-    <div style="font-size:12px;color:#c9bea4;">장르별 작품 수집 · 공식 플랫폼 안내</div>
-  </div>
-  <div>
-    <div class="main-title">WEBTOON<br>ARCHIVE<span style="color:#343a32;">✳</span></div>
-    <div class="poster-sub">THE INDEPENDENT WEBTOON PAPER · VOL. 001</div>
-    <div class="poster-stamp">READ · COLLECT · REMEMBER</div>
-  </div>
-  <div class="poster-note">
-    <b>당신의 다음 이야기는<br>여기서 시작됩니다.</b>
-    <p style="margin:9px 0 0;">취향에 맞는 장르를 찾고<br>새로운 작품을 발견해 보세요.</p>
-    <div style="font:11px 'Special Elite',monospace;color:#8d3029;margin-top:8px;">EST. 2026 ★</div>
-  </div>
-</div>
+:root {
+    --yellow: #fff000;
+    --red: #ff1717;
+    --blue: #123bff;
+    --black: #080808;
+    --white: #ffffff;
+}
+
+.stApp {
+    background: var(--yellow);
+    color: var(--black);
+    font-family: 'Do Hyeon', sans-serif;
+}
+
+[data-testid="stHeader"] {
+    background: var(--yellow);
+}
+
+[data-testid="stSidebar"] {
+    background: var(--red);
+    border-right: 5px solid var(--black);
+}
+
+[data-testid="stSidebar"] * {
+    color: var(--white) !important;
+}
+
+.block-container {
+    max-width: 1450px;
+    padding: 1rem 1.5rem 3rem;
+}
+
+h1, h2, h3, p, label {
+    color: var(--black);
+}
+
+h1, h2, h3 {
+    font-family: 'Black Han Sans', sans-serif;
+}
+
+hr {
+    border: 0;
+    border-top: 3px solid var(--black);
+}
+
+.stButton > button,
+.stLinkButton > a {
+    background: var(--red);
+    color: var(--white) !important;
+    border: 3px solid var(--black);
+    border-radius: 0;
+    font-family: 'Do Hyeon', sans-serif;
+    font-size: 18px;
+    box-shadow: 4px 4px 0 var(--black);
+    transition: .12s;
+}
+
+.stButton > button:hover,
+.stLinkButton > a:hover {
+    background: var(--blue);
+    color: var(--white) !important;
+    border-color: var(--black);
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 var(--black);
+}
+
+div[data-baseweb="select"] > div,
+div[data-testid="stTextInput"] input {
+    background: var(--white);
+    color: var(--black);
+    border: 3px solid var(--black);
+    border-radius: 0;
+}
+
+div[data-testid="stMetric"] {
+    background: var(--white);
+    border: 3px solid var(--black);
+    border-radius: 0;
+    box-shadow: 5px 5px 0 var(--red);
+}
+
+div[data-testid="stMetricLabel"],
+div[data-testid="stMetricValue"] {
+    color: var(--black);
+}
+
+[data-testid="stExpander"] {
+    background: var(--white);
+    border: 3px solid var(--black);
+    border-radius: 0;
+    box-shadow: 4px 4px 0 var(--red);
+    margin-bottom: 12px;
+}
+
+[data-testid="stExpander"] summary {
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 20px;
+}
+
+a {
+    color: var(--blue) !important;
+    font-weight: bold;
+}
+
+.poster {
+    display: grid;
+    grid-template-columns: 105px minmax(0, 1fr) 150px;
+    gap: 15px;
+    align-items: stretch;
+    background: var(--yellow);
+    border: 5px solid var(--black);
+    padding: 15px;
+    margin: 10px 0 25px;
+    box-shadow: 8px 8px 0 var(--black);
+}
+
+.poster-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: start;
+    width: 100px;
+    height: 100px;
+    background: var(--red);
+    color: var(--white);
+    border: 3px solid var(--black);
+    border-radius: 50%;
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 44px;
+    writing-mode: vertical-rl;
+    transform: rotate(-5deg);
+}
+
+.poster-main {
+    min-width: 0;
+}
+
+.poster-small {
+    font-size: 15px;
+    font-weight: bold;
+    line-height: 1.6;
+}
+
+.main-title {
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: clamp(35px, 6vw, 82px);
+    color: var(--red);
+    line-height: 1;
+    letter-spacing: -2px;
+    text-shadow: 3px 3px 0 var(--black);
+    margin: 8px 0 14px;
+    overflow-wrap: anywhere;
+}
+
+.poster-subtitle {
+    color: var(--blue);
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: clamp(18px, 2.8vw, 35px);
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+.poster-side {
+    background: var(--red);
+    border: 3px solid var(--black);
+    color: var(--white);
+    padding: 10px 7px;
+    text-align: center;
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 19px;
+    line-height: 1.65;
+    overflow-wrap: anywhere;
+}
+
+.poster-side * {
+    color: var(--white) !important;
+}
+
+.section-title {
+    background: var(--red);
+    color: var(--white);
+    border: 3px solid var(--black);
+    padding: 8px 12px;
+    margin: 28px 0 15px;
+    box-shadow: 4px 4px 0 var(--black);
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 23px;
+}
+
+.section-title small {
+    float: right;
+    font-size: 12px;
+    padding-top: 8px;
+}
+
+.paper-box,
+.index-card,
+.copyright {
+    background: var(--white);
+    border: 3px solid var(--black);
+    border-radius: 0;
+    padding: 15px;
+    margin-bottom: 12px;
+    box-shadow: 5px 5px 0 var(--black);
+}
+
+.red-label {
+    display: inline-block;
+    background: var(--red);
+    color: var(--white);
+    border: 2px solid var(--black);
+    padding: 4px 8px;
+    font-size: 14px;
+}
+
+.index-number,
+.catalog-count {
+    color: var(--red);
+    font-weight: bold;
+}
+
+.index-title {
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 25px;
+    margin: 8px 0;
+}
+
+.index-desc,
+.small-note {
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+.footer {
+    text-align: center;
+    border-top: 4px solid var(--black);
+    margin-top: 35px;
+    padding-top: 15px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+@media (max-width: 700px) {
+    .block-container {
+        padding: .6rem .7rem 2rem;
+    }
+
+    .poster {
+        grid-template-columns: 1fr;
+    }
+
+    .poster-logo {
+        width: 75px;
+        height: 75px;
+        font-size: 32px;
+    }
+
+    .poster-side {
+        font-size: 17px;
+    }
+
+    .section-title {
+        font-size: 20px;
+    }
+}
+</style>
 """, unsafe_allow_html=True)
-
 # 아카이브 요약
 unique_genre_count = len(webtoon_data)
 unique_title_count = len(all_titles)
