@@ -236,11 +236,15 @@ with right:
     )
 
     st.markdown("""
-    <div class="result-card">
-        <div class="result-banner">SYSTEM MESSAGE</div>
-        <p>캐릭터 생성 대기 중...</p>
-        <p style="color:#00f5ff">STATUS : READY</p>
-        <p style="color:#c4ff38">MODE : RANDOM</p>
+    <div class="wardrobe">
+        <h4 style="color:#f7d36c;">장비 보관함</h4>
+        <p>🗡 기본 장비 지급 준비 완료</p>
+        <p>🎒 등록증 인쇄 대기</p>
+        <p>✨ 마법진 충전 중</p>
+
+        <div class="slime">
+            💚 슬라임 : "등록서를 작성하면 모험가를 데려올게!"
+        </div>
     </div>
     """, unsafe_allow_html=True)
 
