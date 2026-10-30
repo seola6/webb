@@ -12,166 +12,165 @@ st.set_page_config(
 # ── ARCADE / FLYER STYLE ──
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Gowun+Dodum&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Gowun+Batang:wght@400;700&display=swap');
 
-.stApp {
-    background-color: #101014;
-    color: #f7f5ee;
-    font-family: 'Gowun Dodum', sans-serif;
+.stApp{
+    background:#17130f;
+    color:#f4ead2;
+    font-family:'Gowun Batang',serif;
 }
-.block-container {
-    max-width: 1000px;
-    padding-top: 2rem;
-    padding-bottom: 3rem;
+
+/* 전체 폭 */
+.block-container{
+    max-width:1000px;
+    padding-top:2rem;
+    padding-bottom:3rem;
 }
-.arcade-header {
-    background: #181820;
-    border: 3px solid #ff3eaa;
-    box-shadow: 6px 6px 0 #00f5ff;
-    padding: 28px 20px;
-    text-align: center;
-    margin: 8px 0 30px;
+
+/* 길드 간판 */
+.guild-header{
+    background:linear-gradient(180deg,#4d3319,#2b1d0f);
+    border:4px solid #c79b49;
+    box-shadow:0 0 25px rgba(199,155,73,.3), inset 0 0 20px rgba(255,230,170,.08);
+    padding:32px;
+    text-align:center;
+    margin-bottom:28px;
 }
-.arcade-mini {
-    color: #c4ff38;
-    font-size: 11px;
-    letter-spacing: 3px;
-    line-height: 2;
+
+.guild-mini{
+    color:#d8c18a;
+    letter-spacing:3px;
+    font-size:12px;
 }
-.arcade-title {
-    font-family: 'Press Start 2P', monospace;
-    color: #ff3eaa;
-    font-size: clamp(19px, 4vw, 35px);
-    line-height: 1.8;
-    text-shadow: 3px 3px #00f5ff;
-    margin: 14px 0;
-    overflow-wrap: anywhere;
+
+.guild-title{
+    font-family:'Cinzel',serif;
+    color:#f7d36c;
+    font-size:clamp(30px,5vw,52px);
+    text-shadow:0 0 8px rgba(255,220,120,.35);
+    margin:16px 0;
 }
-.arcade-subtitle {
-    color: #f7f5ee;
-    font-size: 14px;
-    letter-spacing: 2px;
+
+.guild-sub{
+    color:#e9d7b0;
 }
-.flyer {
-    background: #f8f0d9;
-    color: #151515;
-    padding: 18px;
-    border: 3px dashed #ff3eaa;
-    box-shadow: 5px 5px 0 #c4ff38;
-    margin: 15px 0 25px;
+
+/* 양피지 */
+.parchment{
+    background:#efe2bf;
+    color:#2a1a10;
+    border:3px solid #b88b3f;
+    box-shadow:6px 6px 0 #46301a;
+    padding:20px;
+    margin:18px 0;
 }
-.flyer-tag {
-    display: inline-block;
-    background: #ff3eaa;
-    color: #101014;
-    padding: 5px 9px;
-    font-weight: bold;
-    font-size: 12px;
+
+.quest-tag{
+    display:inline-block;
+    background:#8f2e25;
+    color:#fff6dd;
+    padding:6px 10px;
+    font-size:12px;
+    letter-spacing:2px;
+    transform:rotate(-2deg);
 }
-.flyer h3 {
-    font-family: 'Press Start 2P', monospace;
-    font-size: 15px;
-    line-height: 1.9;
-    margin: 13px 0;
+
+/* 제목 */
+.section-label{
+    font-family:'Cinzel',serif;
+    color:#f3c86b;
+    font-size:18px;
+    border-bottom:2px solid #8b6a34;
+    padding-bottom:8px;
+    margin:30px 0 18px;
 }
-.flyer p {
-    font-size: 14px;
-    line-height: 1.8;
+
+/* 입력창 */
+div[data-baseweb="select"]>div,
+.stTextInput input{
+    background:#2b2219;
+    color:white;
+    border:1px solid #c79b49;
 }
-.section-label {
-    color: #00f5ff;
-    font-family: 'Press Start 2P', monospace;
-    font-size: 12px;
-    line-height: 2;
-    border-bottom: 2px dashed #ff3eaa;
-    padding-bottom: 10px;
-    margin: 28px 0 18px;
+
+/* 버튼 */
+.stButton>button{
+    background:linear-gradient(180deg,#c79b49,#8d5d1f);
+    color:#24170d;
+    border:2px solid #f6dd9c;
+    font-weight:bold;
+    border-radius:4px;
+    min-height:48px;
 }
-.stTextInput label,
-.stSelectbox label {
-    color: #c4ff38 !important;
-    font-weight: bold;
+
+.stButton>button:hover{
+    background:linear-gradient(180deg,#e2bb61,#a46b22);
 }
-div[data-baseweb="select"] > div {
-    background: #202027;
-    color: white;
-    border: 1px solid #00f5ff;
-    border-radius: 0;
+
+/* 장비 보관함 */
+.wardrobe{
+    background:linear-gradient(180deg,#3a2818,#24170d);
+    border:3px solid #7b5226;
+    box-shadow:6px 6px 0 #120d09;
+    padding:18px;
 }
-.stTextInput input {
-    background: #202027;
-    color: white;
-    border: 1px solid #00f5ff;
-    border-radius: 0;
+
+/* 슬라임 말풍선 */
+.slime{
+    background:#24452f;
+    border-left:5px solid #66ff88;
+    padding:14px;
+    margin-top:14px;
+    color:#d7ffe1;
 }
-div.stButton > button {
-    background: #ff3eaa;
-    color: #101014;
-    border: 2px solid #f7f5ee;
-    border-radius: 0;
-    font-weight: 900;
-    min-height: 48px;
-    box-shadow: 4px 4px 0 #00f5ff;
-    transition: 0.1s;
+
+/* 결과 카드 */
+.result-card{
+    background:linear-gradient(180deg,#342414,#1d140d);
+    border:3px solid #d6ab59;
+    box-shadow:0 0 18px rgba(214,171,89,.2);
+    padding:24px;
+    margin-top:16px;
 }
-div.stButton > button:hover {
-    background: #c4ff38;
-    color: #101014;
-    border-color: white;
-    box-shadow: 2px 2px 0 #ff3eaa;
+
+.result-banner{
+    display:inline-block;
+    background:#8f2e25;
+    color:#fff5dd;
+    padding:6px 12px;
+    letter-spacing:2px;
 }
-.result-card {
-    background: #191920;
-    border: 2px solid #00f5ff;
-    box-shadow: 6px 6px 0 #ff3eaa;
-    padding: 22px;
-    margin: 10px 0 25px;
-    overflow-wrap: anywhere;
+
+.character-name{
+    font-family:'Cinzel',serif;
+    color:#ffd774;
+    font-size:34px;
+    margin:14px 0;
 }
-.result-banner {
-    color: #101014;
-    background: #c4ff38;
-    padding: 8px 12px;
-    font-family: 'Press Start 2P', monospace;
-    font-size: 11px;
-    line-height: 1.9;
-    display: inline-block;
-    margin-bottom: 16px;
+
+.character-job{
+    color:#bde3ff;
+    font-size:18px;
 }
-.character-name {
-    color: #ff3eaa;
-    font-size: 30px;
-    font-weight: bold;
+
+.stat-line{
+    border-top:1px dashed #8a6c44;
+    padding:10px 0;
 }
-.character-job {
-    color: #00f5ff;
-    font-size: 17px;
-    margin: 10px 0;
+
+.stat-label{
+    color:#d9b86f;
+    font-weight:bold;
 }
-.stat-line {
-    border-top: 1px dashed #5b5b6a;
-    padding: 10px 0;
-    color: #f7f5ee;
-}
-.stat-label {
-    color: #c4ff38;
-    font-weight: bold;
-}
-.flying-note {
-    color: #ff3eaa;
-    font-family: 'Press Start 2P', monospace;
-    font-size: 10px;
-    line-height: 2.2;
-    text-align: center;
-    border: 1px dashed #ff3eaa;
-    padding: 12px;
-    margin-top: 28px;
-}
-div[data-testid="stCaptionContainer"] {
-    color: #aaa8b8;
+
+.footer-note{
+    text-align:center;
+    color:#b59b72;
+    margin-top:34px;
+    font-size:12px;
 }
 </style>
-""", unsafe_allow_html=True)
+""",unsafe_allow_html=True)
 
 # ── HEADER ──
 st.markdown("""
