@@ -198,12 +198,17 @@ div.stButton > button:hover {
     margin-top: 8px;
 }
 
+/* 하단 */
 .footer-note {
     text-align: center;
     color: #b59b72;
     margin-top: 34px;
     font-size: 12px;
-    line-height: 2;
+    line-height: 2.2;
+}
+
+div[data-testid="stCaptionContainer"] {
+    color: #b59b72;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -212,31 +217,18 @@ div.stButton > button:hover {
 # ── HEADER ──
 st.markdown("""
 <div class="guild-header">
-    <div class="guild-mini">
-        KINGDOM ADVENTURERS GUILD · REGISTRATION HALL
-    </div>
-
-    <div class="guild-title">
-        CHARACTER FACTORY
-    </div>
-
-    <div class="guild-sub">
-        모험가 등록소에 오신 것을 환영합니다.
-    </div>
-
-    <div class="guild-mini">
-        EST. 199X · THE WORLD OF ADVENTURE
-    </div>
+<div class="guild-mini">KINGDOM ADVENTURERS GUILD · REGISTRATION HALL</div>
+<div class="guild-title">CHARACTER FACTORY</div>
+<div class="guild-sub">모험가 등록소에 오신 것을 환영합니다.</div>
+<div class="guild-mini">EST. 199X · THE WORLD OF ADVENTURE</div>
 </div>
 
 <div class="parchment">
-    <span class="quest-tag">의뢰서 #001</span>
-    <h3>⚔ 나만의 모험가를 소환하라!</h3>
-    <p>
-        길드에 방문한 모험가 여러분을 환영합니다.<br>
-        원하는 외형과 세계관을 선택하면 새로운 모험가가 배정됩니다.
-    </p>
-    <p>★ CHARACTER REGISTRATION · LIMITED EDITION ★</p>
+<span class="quest-tag">의뢰서 #001</span>
+<h3>⚔ 나만의 모험가를 소환하라!</h3>
+<p>길드에 방문한 모험가 여러분을 환영합니다.<br>
+원하는 외형과 세계관을 선택하면 새로운 모험가가 배정됩니다.</p>
+<p>★ CHARACTER REGISTRATION · LIMITED EDITION ★</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -285,20 +277,18 @@ with right:
     )
 
     st.markdown("""
-    <div class="wardrobe">
-        <h4 style="color:#f7d36c;">🧰 장비 보관함</h4>
-
-        <p>🗡 기본 장비 지급 준비 완료</p>
-        <p>🎒 모험가 등록증 인쇄 대기</p>
-        <p>✨ 마법진 충전 완료</p>
-
-        <div class="slime">
-            💚 슬라임 : "어서 와! 어떤 모험가를 만나고 싶어?"
-            <br>
-            "등록서를 작성하면 내가 데려올게!"
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+<div class="wardrobe">
+<h4 style="color:#f7d36c;">🧰 장비 보관함</h4>
+<p>🗡 기본 장비 지급 준비 완료</p>
+<p>🎒 모험가 등록증 인쇄 대기</p>
+<p>✨ 마법진 충전 완료</p>
+<div class="slime">
+💚 슬라임 : "어서 와! 어떤 모험가를 만나고 싶어?"
+<br>
+"등록서를 작성하면 내가 데려올게!"
+</div>
+</div>
+""", unsafe_allow_html=True)
 
 
 # ── CHARACTER GENERATOR ──
@@ -331,12 +321,12 @@ if st.button(
 # ── RESULT ──
 result = st.session_state.get("character_result")
 
-# 이전 버전 데이터와 호환
 required_keys = [
     "name", "gender", "job", "hair",
     "genre", "color", "rarity"
 ]
 
+# 이전 버전 데이터 호환
 if result and not all(key in result for key in required_keys):
     del st.session_state["character_result"]
     result = None
@@ -348,60 +338,26 @@ if result:
     )
 
     st.markdown(f"""
-    <div class="result-card">
-
-        <span class="result-banner">
-            ★ ADVENTURER LICENSE ★
-        </span>
-
-        <div class="character-name">
-            {html.escape(str(result["name"]))}
-        </div>
-
-        <div class="character-job">
-            ⚔ 직업 : {html.escape(str(result["job"]))}
-        </div>
-
-        <div class="stat-line">
-            <span class="stat-label">GENDER //</span>
-            {html.escape(str(result["gender"]))}
-        </div>
-
-        <div class="stat-line">
-            <span class="stat-label">HAIR STYLE //</span>
-            {html.escape(str(result["hair"]))}
-        </div>
-
-        <div class="stat-line">
-            <span class="stat-label">WORLD //</span>
-            {html.escape(str(result["genre"]))}
-        </div>
-
-        <div class="stat-line">
-            <span class="stat-label">COLOR CODE //</span>
-            {html.escape(str(result["color"]))}
-        </div>
-
-        <div class="stat-line">
-            <span class="stat-label">RARITY //</span>
-            <div class="rarity">
-                ⭐ {html.escape(str(result["rarity"]))}
-            </div>
-        </div>
-
-    </div>
-    """, unsafe_allow_html=True)
+<div class="result-card">
+<span class="result-banner">★ ADVENTURER LICENSE ★</span>
+<div class="character-name">{html.escape(str(result["name"]))}</div>
+<div class="character-job">⚔ 직업 : {html.escape(str(result["job"]))}</div>
+<div class="stat-line"><span class="stat-label">GENDER //</span> {html.escape(str(result["gender"]))}</div>
+<div class="stat-line"><span class="stat-label">HAIR STYLE //</span> {html.escape(str(result["hair"]))}</div>
+<div class="stat-line"><span class="stat-label">WORLD //</span> {html.escape(str(result["genre"]))}</div>
+<div class="stat-line"><span class="stat-label">COLOR CODE //</span> {html.escape(str(result["color"]))}</div>
+<div class="stat-line"><span class="stat-label">RARITY //</span><div class="rarity">⭐ {html.escape(str(result["rarity"]))}</div></div>
+</div>
+""", unsafe_allow_html=True)
 
     st.markdown("""
-    <div class="parchment">
-        <span class="quest-tag">CHARACTER FILE</span>
-        <h3>등록 완료!</h3>
-        <p>
-            새로운 모험가가 길드에 등록되었습니다.<br>
-            이제 이 캐릭터의 이야기를 시작해 보세요!
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
+<div class="parchment">
+<span class="quest-tag">CHARACTER FILE</span>
+<h3>등록 완료!</h3>
+<p>새로운 모험가가 길드에 등록되었습니다.<br>
+이제 이 캐릭터의 이야기를 시작해 보세요!</p>
+</div>
+""", unsafe_allow_html=True)
 
     if st.button(
         "↻ 다른 모험가 소환하기 / RANDOMIZE",
@@ -416,10 +372,10 @@ if result:
 # ── FOOTER ──
 st.markdown("""
 <div class="footer-note">
-    ✦ MAY YOUR JOURNEY BE FILLED WITH ADVENTURE ✦
-    <br>
-    CHARACTER FACTORY · KINGDOM GUILD
-    <br>
-    THANK YOU FOR VISITING!
+✦ MAY YOUR JOURNEY BE FILLED WITH ADVENTURE ✦
+<br>
+CHARACTER FACTORY · KINGDOM GUILD
+<br>
+THANK YOU FOR VISITING!
 </div>
 """, unsafe_allow_html=True)
