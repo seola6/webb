@@ -174,23 +174,24 @@ div[data-baseweb="select"]>div,
 
 # ── HEADER ──
 st.markdown("""
-<div class="arcade-header">
-    <div class="arcade-mini">★ INSERT COIN · PLAYER 001 · INSERT COIN ★</div>
-    <div class="arcade-title">CHARACTER<br>FACTORY</div>
-    <div class="arcade-subtitle">YOUR TASTE, YOUR CHARACTER.</div>
-    <div class="arcade-mini">NO RULES! JUST CREATE!</div>
+<div class="guild-header">
+    <div class="guild-mini">KINGDOM ADVENTURERS GUILD · REGISTRATION HALL</div>
+    <div class="guild-title">CHARACTER FACTORY</div>
+    <div class="guild-sub">
+        모험가 등록소에 오신 것을 환영합니다.
+    </div>
 </div>
 
-<div class="flyer">
-    <span class="flyer-tag">긴급 전단 / SPECIAL ISSUE</span>
-    <h3>▶ 나만의 캐릭터를 만들어라!</h3>
-    <p>
-        취향에 맞는 조건을 선택하고 새로운 캐릭터를 생성하세요.<br>
-        성별과 이름, 직업은 랜덤! 결과는 오직 운명에 맡기세요.
-    </p>
-    <p>★ LIMITED EDITION · CHARACTER DATA CENTER ★</p>
+<div class="parchment">
+<span class="quest-tag">의뢰서 #001</span>
+
+### 모험가 등록 절차
+
+좋아하는 색과 세계관을 선택하면 길드가 새로운 모험가를 배정합니다.
+
+슬라임이 등록을 도와줄 거예요.
 </div>
-""", unsafe_allow_html=True)
+""",unsafe_allow_html=True)
 
 # ── CHARACTER DATA ──
 names = [
