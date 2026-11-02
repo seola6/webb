@@ -2,6 +2,8 @@
 import streamlit as st
 import random
 import html
+import streamlit.components.v1 as components
+from pathlib import Path
 
 st.set_page_config(
     page_title="CHARACTER FACTORY",
@@ -198,6 +200,17 @@ div.stButton > button:hover {
     margin-top: 8px;
 }
 
+/* 공포 게임 안내 */
+.game-heading {
+    background: #170b0b;
+    color: #e9caca;
+    border: 2px solid #8f2e25;
+    padding: 20px;
+    margin: 20px 0;
+    text-align: center;
+    line-height: 2;
+}
+
 /* 하단 */
 .footer-note {
     text-align: center;
@@ -277,18 +290,68 @@ with right:
     )
 
     st.markdown("""
-<div class="wardrobe">
-<h4 style="color:#f7d36c;">🧰 장비 보관함</h4>
-<p>🗡 기본 장비 지급 준비 완료</p>
-<p>🎒 모험가 등록증 인쇄 대기</p>
-<p>✨ 마법진 충전 완료</p>
-<div class="slime">
-💚 슬라임 : "어서 와! 어떤 모험가를 만나고 싶어?"
-<br>
-"등록서를 작성하면 내가 데려올게!"
-</div>
-</div>
-""", unsafe_allow_html=True)
+    <div class="wardrobe">
+    <h4 style="color:#f7d36c;">🧰 장비 보관함</h4>
+    <p>🗡 기본 장비 지급 준비 완료</p>
+    <p>🎒 모험가 등록증 인쇄 대기</p>
+    <p>✨ 마법진 충전 완료</p>
+    <div class="slime">
+    💚 슬라임 : "어서 와! 어떤 모험가를 만나고 싶어?"
+    <br>
+    "등록서를 작성하면 내가 데려올게!"
+    </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+
+# ── SECRET HORROR GAME ──
+# 검정 + 긴 머리 + 스릴러를 선택하면 게임 실행
+
+dark_color_words = ["검정", "검은색", "검은", "블랙", "black"]
+
+is_black = any(
+    word in color.strip().lower()
+    for word in dark_color_words
+)
+
+launch_horror = (
+    is_black
+    and hair == "긴 머리"
+    and genre == "스릴러"
+)
+
+if launch_horror:
+
+    st.markdown("""
+    <div class="game-heading">
+        <b>⚠ 비정상적인 마력 반응 감지</b>
+        <br>
+        등록소의 공간이 뒤틀리고 있습니다.
+        <br>
+        화면 아래의 문을 통과하세요.
+    </div>
+    """, unsafe_allow_html=True)
+
+    game_path = Path(__file__).parent / "the_last_hallway.html"
+
+    if game_path.exists():
+
+        game_html = game_path.read_text(encoding="utf-8")
+
+        components.html(
+            game_html,
+            height=760,
+            scrolling=False
+        )
+
+    else:
+        st.error(
+            "게임 파일을 찾을 수 없어! "
+            "the_last_hallway.html 파일을 이 파이썬 파일과 같은 폴더에 넣어 줘."
+        )
+
+    # 아래의 일반 캐릭터 생성 코드는 실행하지 않음
+    st.stop()
 
 
 # ── CHARACTER GENERATOR ──
@@ -338,26 +401,26 @@ if result:
     )
 
     st.markdown(f"""
-<div class="result-card">
-<span class="result-banner">★ ADVENTURER LICENSE ★</span>
-<div class="character-name">{html.escape(str(result["name"]))}</div>
-<div class="character-job">⚔ 직업 : {html.escape(str(result["job"]))}</div>
-<div class="stat-line"><span class="stat-label">GENDER //</span> {html.escape(str(result["gender"]))}</div>
-<div class="stat-line"><span class="stat-label">HAIR STYLE //</span> {html.escape(str(result["hair"]))}</div>
-<div class="stat-line"><span class="stat-label">WORLD //</span> {html.escape(str(result["genre"]))}</div>
-<div class="stat-line"><span class="stat-label">COLOR CODE //</span> {html.escape(str(result["color"]))}</div>
-<div class="stat-line"><span class="stat-label">RARITY //</span><div class="rarity">⭐ {html.escape(str(result["rarity"]))}</div></div>
-</div>
-""", unsafe_allow_html=True)
+    <div class="result-card">
+    <span class="result-banner">★ ADVENTURER LICENSE ★</span>
+    <div class="character-name">{html.escape(str(result["name"]))}</div>
+    <div class="character-job">⚔ 직업 : {html.escape(str(result["job"]))}</div>
+    <div class="stat-line"><span class="stat-label">GENDER //</span> {html.escape(str(result["gender"]))}</div>
+    <div class="stat-line"><span class="stat-label">HAIR STYLE //</span> {html.escape(str(result["hair"]))}</div>
+    <div class="stat-line"><span class="stat-label">WORLD //</span> {html.escape(str(result["genre"]))}</div>
+    <div class="stat-line"><span class="stat-label">COLOR CODE //</span> {html.escape(str(result["color"]))}</div>
+    <div class="stat-line"><span class="stat-label">RARITY //</span><div class="rarity">⭐ {html.escape(str(result["rarity"]))}</div></div>
+    </div>
+    """, unsafe_allow_html=True)
 
     st.markdown("""
-<div class="parchment">
-<span class="quest-tag">CHARACTER FILE</span>
-<h3>등록 완료!</h3>
-<p>새로운 모험가가 길드에 등록되었습니다.<br>
-이제 이 캐릭터의 이야기를 시작해 보세요!</p>
-</div>
-""", unsafe_allow_html=True)
+    <div class="parchment">
+    <span class="quest-tag">CHARACTER FILE</span>
+    <h3>등록 완료!</h3>
+    <p>새로운 모험가가 길드에 등록되었습니다.<br>
+    이제 이 캐릭터의 이야기를 시작해 보세요!</p>
+    </div>
+    """, unsafe_allow_html=True)
 
     if st.button(
         "↻ 다른 모험가 소환하기 / RANDOMIZE",
