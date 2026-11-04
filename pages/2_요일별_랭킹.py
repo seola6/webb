@@ -7,14 +7,13 @@ st.set_page_config(
     layout="wide"
 )
 
-# ─────────────────────────────
-# 디자인 CSS
-# ─────────────────────────────
+# ─────────────────────────
+# CSS 디자인
+# ─────────────────────────
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=DM+Serif+Display&display=swap');
 
-/* 전체 배경 */
 .stApp {
     background: #e9e3d2;
     color: #354637;
@@ -22,9 +21,9 @@ st.markdown("""
 }
 
 .block-container {
-    max-width: 1000px;
-    padding-top: 2.5rem;
-    padding-bottom: 4rem;
+    max-width: 1150px;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
 }
 
 header[data-testid="stHeader"] {
@@ -45,18 +44,11 @@ section[data-testid="stSidebar"] * {
     color: #f4eddd;
 }
 
-/* 사이드바 메뉴 */
-section[data-testid="stSidebar"] a {
-    border-radius: 3px;
-    transition: background 0.3s ease, color 0.3s ease;
-}
-
 section[data-testid="stSidebar"] a:hover {
     background: #53664b;
     color: #f2d47b !important;
 }
 
-/* 현재 선택된 메뉴 */
 section[data-testid="stSidebar"] a[aria-current="page"] {
     background: #53664b;
     border-left: 3px solid #eacb69;
@@ -66,18 +58,17 @@ section[data-testid="stSidebar"] hr {
     border-color: #a99b70;
 }
 
-/* 사이드바 상단 장식 */
 section[data-testid="stSidebar"] [data-testid="stSidebarContent"]::before {
-    content: "✦  WEBTOON ARCHIVE  ✦";
+    content: "✦ WEBTOON ARCHIVE ✦";
     display: block;
     color: #eacb69;
     text-align: center;
     font-family: 'DM Serif Display', serif;
     font-size: 15px;
     letter-spacing: 2px;
-    padding: 22px 5px 18px;
+    padding: 18px 5px;
     border-bottom: 1px solid #9c916c;
-    margin-bottom: 18px;
+    margin-bottom: 15px;
 }
 
 /* ── 별 배경 ── */
@@ -88,84 +79,85 @@ section[data-testid="stSidebar"] [data-testid="stSidebarContent"]::before {
     height: 100%;
     overflow: hidden;
     pointer-events: none;
-    z-index: 0;
+    z-index: 9999;
 }
 
 .star {
     position: absolute;
-    color: #d7ad42;
-    font-size: 18px;
+    color: #e4b936;
+    font-size: 25px;
     opacity: 0;
-    text-shadow: 0 0 7px #eacb69, 0 0 14px #eacb69;
-    animation:
-        twinkle 4s ease-in-out infinite,
-        float-star 12s ease-in-out infinite;
+    text-shadow:
+        0 0 5px #f5d66d,
+        0 0 12px #eacb69,
+        0 0 22px #d9a92e;
+    animation: twinkle 3s ease-in-out infinite,
+               float-star 9s ease-in-out infinite;
 }
 
-.star:nth-child(1)  { left: 5%;  top: 18%; animation-delay: 0s; }
-.star:nth-child(2)  { left: 15%; top: 65%; animation-delay: 1s; }
+.star:nth-child(1)  { left: 5%; top: 15%; animation-delay: 0s; }
+.star:nth-child(2)  { left: 15%; top: 70%; animation-delay: 1s; }
 .star:nth-child(3)  { left: 25%; top: 30%; animation-delay: 2s; }
-.star:nth-child(4)  { left: 35%; top: 12%; animation-delay: 0.5s; }
-.star:nth-child(5)  { left: 45%; top: 78%; animation-delay: 1.5s; }
-.star:nth-child(6)  { left: 55%; top: 25%; animation-delay: 2.5s; }
-.star:nth-child(7)  { left: 65%; top: 60%; animation-delay: 0.8s; }
-.star:nth-child(8)  { left: 75%; top: 15%; animation-delay: 3s; }
-.star:nth-child(9)  { left: 85%; top: 75%; animation-delay: 1.2s; }
-.star:nth-child(10) { left: 95%; top: 40%; animation-delay: 2.2s; }
-.star:nth-child(11) { left: 10%; top: 90%; animation-delay: 1.8s; }
-.star:nth-child(12) { left: 30%; top: 48%; animation-delay: 3.2s; }
-.star:nth-child(13) { left: 50%; top: 8%;  animation-delay: 0.7s; }
-.star:nth-child(14) { left: 70%; top: 90%; animation-delay: 2.7s; }
-.star:nth-child(15) { left: 90%; top: 25%; animation-delay: 1.4s; }
-.star:nth-child(16) { left: 40%; top: 55%; animation-delay: 3.5s; }
+.star:nth-child(4)  { left: 35%; top: 85%; animation-delay: .5s; }
+.star:nth-child(5)  { left: 45%; top: 12%; animation-delay: 1.5s; }
+.star:nth-child(6)  { left: 55%; top: 65%; animation-delay: 2.5s; }
+.star:nth-child(7)  { left: 65%; top: 25%; animation-delay: .8s; }
+.star:nth-child(8)  { left: 75%; top: 80%; animation-delay: 3s; }
+.star:nth-child(9)  { left: 85%; top: 18%; animation-delay: 1.2s; }
+.star:nth-child(10) { left: 95%; top: 55%; animation-delay: 2.2s; }
+.star:nth-child(11) { left: 12%; top: 42%; animation-delay: 1.8s; }
+.star:nth-child(12) { left: 92%; top: 88%; animation-delay: 3.2s; }
+.star:nth-child(13) { left: 40%; top: 48%; animation-delay: .7s; }
+.star:nth-child(14) { left: 70%; top: 45%; animation-delay: 2.7s; }
+.star:nth-child(15) { left: 30%; top: 8%; animation-delay: 1.4s; }
+.star:nth-child(16) { left: 60%; top: 90%; animation-delay: 3.5s; }
 
 @keyframes twinkle {
     0%, 100% {
-        opacity: 0.08;
-        transform: scale(0.6) rotate(0deg);
+        opacity: .25;
+        transform: scale(.7) rotate(0deg);
     }
     50% {
-        opacity: 0.85;
-        transform: scale(1.35) rotate(35deg);
+        opacity: 1;
+        transform: scale(1.5) rotate(45deg);
     }
 }
 
 @keyframes float-star {
-    0%, 100% { margin-top: 0px; }
-    50% { margin-top: -22px; }
+    0%, 100% { margin-top: 0; }
+    50% { margin-top: -25px; }
 }
 
-/* ── 신문 머리말 ── */
+/* ── 머리말 ── */
 .paper-header {
-    position: relative;
     background: #354637;
     color: #f4eddd;
     text-align: center;
-    padding: 45px 20px 38px;
+    padding: 20px 15px 17px;
     border: 1px solid #b9a982;
     outline: 3px double #354637;
-    outline-offset: 5px;
-    margin-bottom: 35px;
+    outline-offset: 3px;
+    margin: 5px 0 17px;
 }
 
 .eyebrow {
-    color: #d8c16e;
-    font-size: 11px;
-    letter-spacing: 5px;
+    color: #e4c66b;
+    font-size: 9px;
+    letter-spacing: 4px;
 }
 
 .paper-header h1 {
     color: #f4eddd;
     font-family: 'DM Serif Display', serif;
-    font-size: clamp(34px, 5vw, 55px);
+    font-size: clamp(30px, 4vw, 43px);
     letter-spacing: 3px;
-    margin: 17px 0;
+    margin: 7px 0;
 }
 
 .paper-header p {
     color: #e3d8bd;
-    font-size: 14px;
-    margin-bottom: 20px;
+    font-size: 12px;
+    margin: 5px 0;
 }
 
 /* 발행 정보 */
@@ -173,12 +165,12 @@ section[data-testid="stSidebar"] [data-testid="stSidebarContent"]::before {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: 10px;
-    padding: 12px 3px;
-    margin: 20px 0 25px;
+    gap: 8px;
+    padding: 7px 2px;
+    margin: 10px 0 13px;
     border-top: 1px solid #a99b7c;
     border-bottom: 3px double #354637;
-    font-size: 11px;
+    font-size: 10px;
     letter-spacing: 1px;
 }
 
@@ -186,47 +178,48 @@ section[data-testid="stSidebar"] [data-testid="stSidebarContent"]::before {
 .notice {
     background: #f8f2e5;
     border: 1px solid #c2b496;
-    box-shadow: 4px 4px 0 #d5cbb7;
-    padding: 20px 23px;
-    margin: 25px 0 35px;
+    box-shadow: 3px 3px 0 #d5cbb7;
+    padding: 10px 15px;
+    margin: 12px 0 18px;
     color: #454537;
+    font-size: 12px;
 }
 
 .notice-label {
     color: #a34d3e;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: bold;
-    letter-spacing: 3px;
-    margin-bottom: 10px;
+    letter-spacing: 2px;
+    margin-bottom: 3px;
 }
 
 /* 소제목 */
 .section-heading {
-    font-size: 19px;
+    font-size: 16px;
     font-weight: bold;
     border-bottom: 2px solid #354637;
-    padding-bottom: 10px;
-    margin: 35px 0 18px;
+    padding-bottom: 6px;
+    margin: 15px 0 10px;
 }
 
 .day-caption {
     color: #85785f;
-    font-size: 12px;
-    letter-spacing: 2px;
-    margin-bottom: 10px;
+    font-size: 10px;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
 }
 
-/* ── 요일 선택 ── */
+/* 요일 선택 */
 div[role="radiogroup"] {
-    gap: 8px;
+    gap: 5px;
 }
 
 div[role="radiogroup"] label {
     background: #f8f2e5;
     border: 1px solid #b9aa8a;
-    padding: 9px 14px;
+    padding: 5px 9px;
     border-radius: 2px;
-    transition: 0.2s;
+    transition: .2s;
 }
 
 div[role="radiogroup"] label:hover {
@@ -234,7 +227,6 @@ div[role="radiogroup"] label:hover {
     border-color: #b28d3d;
 }
 
-/* 선택된 요일 */
 div[role="radiogroup"] label:has(input:checked) {
     background: #354637;
     border-color: #d7ad42;
@@ -248,109 +240,106 @@ div[role="radiogroup"] label:has(input:checked) p {
 .rank-card {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 13px;
+    min-height: 65px;
     background: #f8f2e5;
     border: 1px solid #c2b496;
-    border-left: 5px solid #7b886d;
-    padding: 19px 22px;
-    margin: 12px 0;
-    box-shadow: 3px 3px 0 #d5cbb7;
-    transition: 0.25s ease;
+    border-left: 4px solid #7b886d;
+    padding: 10px 14px;
+    margin: 5px 0;
+    box-shadow: 2px 2px 0 #d5cbb7;
+    transition: .2s;
 }
 
 .rank-card:hover {
-    transform: translateX(5px);
-    box-shadow: 5px 5px 0 #c6b68e;
+    transform: translateY(-3px);
+    box-shadow: 4px 4px 0 #c6b68e;
 }
 
 .rank-card.first {
     background: #f2e7d2;
     border-left-color: #b28d3d;
-    padding: 24px 22px;
 }
 
 .rank-number {
-    min-width: 48px;
+    min-width: 35px;
     font-family: 'DM Serif Display', serif;
-    font-size: 29px;
+    font-size: 25px;
     color: #354637;
     text-align: center;
 }
 
 .first .rank-number {
     color: #a34d3e;
-    font-size: 37px;
+    font-size: 31px;
 }
 
 .rank-name {
-    font-size: 18px;
+    font-size: 15px;
     font-weight: bold;
     color: #354637;
 }
 
 .first .rank-name {
-    font-size: 21px;
+    font-size: 17px;
 }
 
 .rank-subtitle {
-    font-size: 10px;
+    font-size: 9px;
     color: #95866a;
-    letter-spacing: 2px;
-    margin-top: 5px;
+    letter-spacing: 1px;
+    margin-top: 3px;
 }
 
-/* 순위 장식 */
+/* 순위 표시 */
 .archive-stamp {
     display: inline-block;
-    border: 2px solid #a34d3e;
+    border: 1px solid #a34d3e;
     color: #a34d3e;
-    padding: 5px 12px;
-    font-size: 10px;
+    padding: 3px 9px;
+    font-size: 9px;
     letter-spacing: 2px;
     transform: rotate(-2deg);
-    margin: 5px 0 15px;
+    margin: 2px 0 8px;
 }
 
+/* 하단 */
 .footer-note {
     border-top: 1px dashed #a99b7c;
-    margin-top: 45px;
-    padding-top: 22px;
+    margin-top: 15px;
+    padding-top: 8px;
     text-align: center;
     color: #827963;
-    font-size: 11px;
-    line-height: 2;
-}
-
-hr {
-    border-color: #b9aa8a;
+    font-size: 9px;
+    line-height: 1.5;
 }
 
 /* 작은 화면 */
 @media (max-width: 600px) {
     .paper-header {
-        padding: 30px 12px;
+        padding: 18px 8px;
     }
 
     .edition {
-        font-size: 9px;
-    }
-
-    .rank-card {
-        padding: 15px 12px;
-        gap: 12px;
+        font-size: 8px;
     }
 
     .rank-name {
-        font-size: 15px;
+        font-size: 13px;
+    }
+
+    .rank-card {
+        padding: 8px;
+        gap: 8px;
     }
 }
 </style>
 """, unsafe_allow_html=True)
 
 
-# ─────────────────────────────
-# 별 배경 출력
-# ─────────────────────────────
+# ─────────────────────────
+# 별 출력
+# ─────────────────────────
 st.markdown("""
 <div class="star-field">
     <span class="star">✦</span>
@@ -373,9 +362,9 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-# ─────────────────────────────
-# 요일별 웹툰 목록
-# ─────────────────────────────
+# ─────────────────────────
+# 웹툰 목록
+# ─────────────────────────
 ranking_data = {
     "월요일": [
         "신체",
@@ -429,9 +418,9 @@ ranking_data = {
 }
 
 
-# ─────────────────────────────
-# 신문 머리말
-# ─────────────────────────────
+# ─────────────────────────
+# 머리말
+# ─────────────────────────
 st.markdown("""
 <div class="paper-header">
     <div class="eyebrow">✦ THE OLD WEBTOON ARCHIVE · WEEKLY EDITION ✦</div>
@@ -447,16 +436,15 @@ st.markdown("""
 </div>
 
 <div class="notice">
-    <div class="notice-label">✦ WEEKLY BULLETIN / 주간 소식</div>
-    <div>요일을 선택해 해당 요일에 연재되는 웹툰 목록을 확인하세요.</div>
-    <div>오래된 신문 한 장처럼, 오늘의 취향을 기록합니다.</div>
+    <span class="notice-label">✦ WEEKLY BULLETIN</span>
+    &nbsp; 요일을 선택해 해당 요일의 웹툰 목록을 확인하세요.
 </div>
 """, unsafe_allow_html=True)
 
 
-# ─────────────────────────────
+# ─────────────────────────
 # 요일 선택
-# ─────────────────────────────
+# ─────────────────────────
 st.markdown(
     '<div class="section-heading">01. 발행 요일 선택 / SELECT A DAY</div>',
     unsafe_allow_html=True
@@ -478,9 +466,9 @@ day = st.radio(
 )
 
 
-# ─────────────────────────────
-# 선택한 요일의 순위
-# ─────────────────────────────
+# ─────────────────────────
+# 순위 표시
+# ─────────────────────────
 st.markdown(
     f'<div class="section-heading">02. {day} 인기 웹툰 TOP 5</div>',
     unsafe_allow_html=True
@@ -491,38 +479,39 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+# 두 열로 나눠 세로 공간 절약
+left_col, right_col = st.columns(2, gap="medium")
+
 for i, title in enumerate(ranking_data[day], start=1):
 
     rank_class = "rank-card first" if i == 1 else "rank-card"
 
-    st.markdown(
-        f"""
-        <div class="{rank_class}">
-            <div class="rank-number">{i:02d}</div>
-            <div>
-                <div class="rank-name">{title.strip()}</div>
-                <div class="rank-subtitle">
-                    RANKING NO. {i:02d} · {day.upper()}
-                </div>
+    card_html = f"""
+    <div class="{rank_class}">
+        <div class="rank-number">{i:02d}</div>
+        <div>
+            <div class="rank-name">{title.strip()}</div>
+            <div class="rank-subtitle">
+                RANKING NO. {i:02d} · {day.upper()}
             </div>
         </div>
-        """,
-        unsafe_allow_html=True
-    )
+    </div>
+    """
+
+    if i % 2 == 1:
+        with left_col:
+            st.markdown(card_html, unsafe_allow_html=True)
+    else:
+        with right_col:
+            st.markdown(card_html, unsafe_allow_html=True)
 
 
-# ─────────────────────────────
-# 하단 안내
-# ─────────────────────────────
+# ─────────────────────────
+# 하단
+# ─────────────────────────
 st.markdown("""
-<div class="notice">
-    <div class="notice-label">※ ARCHIVE NOTICE</div>
-    <div>이 페이지는 직접 수집하고 입력한 작품 목록을 요일별로 보여 줍니다.</div>
-    <div>실시간 인기 순위가 자동으로 수집되는 기능은 연결되어 있지 않습니다.</div>
-</div>
-
 <div class="footer-note">
     ✦ THE OLD WEBTOON ARCHIVE · WEEKLY COLLECTION ✦<br>
-    오래된 종이, 새로운 이야기 · 기록은 계속됩니다.
+    직접 수집한 작품 목록 · 오래된 종이, 새로운 이야기
 </div>
 """, unsafe_allow_html=True)
