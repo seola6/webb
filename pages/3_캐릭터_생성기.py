@@ -2,8 +2,12 @@
 import streamlit as st
 import random
 import html
+import io
 import streamlit.components.v1 as components
+
 from pathlib import Path
+from PIL import Image
+
 
 st.set_page_config(
     page_title="CHARACTER FACTORY",
@@ -11,7 +15,201 @@ st.set_page_config(
     layout="wide"
 )
 
+
+# ── IMAGE PART SETTINGS ──
+
+BASE_DIR = Path(__file__).parent
+ASSET_DIR = BASE_DIR / "assets"
+
+# 앞쪽에서 뒤쪽 순서
+PART_ORDER = [
+    "item",
+    "decoration",
+    "expression",
+    "clothes",
+    "front_hair",
+    "body_eyes",
+    "back_hair",
+    "skin"
+]
+
+# 실제 이미지 합성 순서: 뒤쪽부터 앞쪽으로
+COMPOSITE_ORDER = list(reversed(PART_ORDER))
+
+PART_NAMES = {
+    "item": "아이템",
+    "decoration": "장식",
+    "expression": "표정",
+    "clothes": "의상",
+    "front_hair": "앞머리",
+    "body_eyes": "눈 & 몸 전체",
+    "back_hair": "뒷머리",
+    "skin": "피부색"
+}
+
+
+# ── COLOR KEYWORDS ──
+
+COLOR_KEYWORDS = {
+    "black": ["검정", "검은색", "검은", "블랙", "black"],
+    "white": ["흰색", "하양", "화이트", "white"],
+    "gray": ["회색", "그레이", "실버", "gray", "grey"],
+    "brown": ["갈색", "브라운", "brown"],
+    "red": ["빨강", "빨간색", "레드", "red"],
+    "orange": ["주황", "오렌지", "orange"],
+    "yellow": ["노랑", "노란색", "금색", "골드", "yellow"],
+    "green": ["초록", "녹색", "그린", "green"],
+    "cyan": ["하늘색", "민트", "청록", "cyan", "mint"],
+    "blue": ["파랑", "파란색", "블루", "blue"],
+    "purple": ["보라", "퍼플", "purple", "violet"],
+    "pink": ["분홍", "핑크", "pink"]
+}
+
+
+def get_color_group(color):
+    color = color.strip().lower()
+
+    for group, words in COLOR_KEYWORDS.items():
+        if any(word in color for word in words):
+            return group
+
+    return None
+
+
+def filename_has_color(filename, color_group):
+    """파일 이름에 색상 표시가 있는지 확인"""
+
+    if not color_group:
+        return True
+
+    name = Path(filename).stem.lower()
+
+    keywords = COLOR_KEYWORDS.get(color_group, [])
+
+    return any(word.lower() in name for word in keywords)
+
+
+def filename_has_hair_length(filename, hair):
+    """파일 이름에 긴 머리 또는 숏컷 표시가 있는지 확인"""
+
+    name = Path(filename).stem.lower()
+
+    if hair == "긴 머리":
+        keywords = [
+            "긴머리", "긴_머리", "long", "longhair",
+            "long_hair"
+        ]
+    else:
+        keywords = [
+            "숏컷", "짧은머리", "short", "shorthair",
+            "short_hair"
+        ]
+
+    return any(word in name for word in keywords)
+
+
+# ── LOAD PART IMAGES ──
+
+def get_part_files(category):
+
+    folder = ASSET_DIR / category
+
+    if not folder.exists():
+        return []
+
+    return sorted(
+        folder.glob("*.png")
+    )
+
+
+# ── SELECT RANDOM PART ──
+
+def select_random_part(category, color, hair):
+
+    files = get_part_files(category)
+
+    if not files:
+        return None
+
+    candidates = list(files)
+
+    # 색상 선택 적용
+    color_group = get_color_group(color)
+
+    color_categories = [
+        "item",
+        "decoration",
+        "clothes",
+        "front_hair",
+        "back_hair"
+    ]
+
+    if category in color_categories and color_group:
+
+        matching = [
+            path for path in candidates
+            if filename_has_color(path.name, color_group)
+        ]
+
+        if matching:
+            candidates = matching
+
+    # 머리 길이 선택 적용
+    if category in ["front_hair", "back_hair"]:
+
+        matching = [
+            path for path in candidates
+            if filename_has_hair_length(path.name, hair)
+        ]
+
+        if matching:
+            candidates = matching
+
+    return random.choice(candidates)
+
+
+# ── COMBINE CHARACTER IMAGES ──
+
+def combine_character(parts):
+
+    character = None
+
+    for category in COMPOSITE_ORDER:
+
+        path = parts.get(category)
+
+        if path is None:
+            continue
+
+        with Image.open(path) as source:
+            layer = source.convert("RGBA")
+
+        if character is None:
+
+            character = Image.new(
+                "RGBA",
+                layer.size,
+                (0, 0, 0, 0)
+            )
+
+        # 모든 파츠는 동일한 캔버스 크기를 사용하는 것을 권장
+        if layer.size != character.size:
+
+            layer = layer.resize(
+                character.size,
+                Image.Resampling.LANCZOS
+            )
+
+        character = Image.alpha_composite(
+            character,
+            layer
+        )
+
+    return character
+
+
 # ── GUILD / WARDROBE STYLE ──
+
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Gowun+Batang:wght@400;700&display=swap');
@@ -228,6 +426,7 @@ div[data-testid="stCaptionContainer"] {
 
 
 # ── HEADER ──
+
 st.markdown("""
 <div class="guild-header">
 <div class="guild-mini">KINGDOM ADVENTURERS GUILD · REGISTRATION HALL</div>
@@ -247,6 +446,7 @@ st.markdown("""
 
 
 # ── CHARACTER DATA ──
+
 names = [
     "유하진", "강민", "서윤", "하린", "도현",
     "윤시온", "백이안", "차유현", "한서우", "정이든",
@@ -262,6 +462,7 @@ jobs_by_genre = {
 
 
 # ── PLAYER CUSTOMIZATION ──
+
 st.markdown(
     '<div class="section-label">01 / ADVENTURER CUSTOMIZATION</div>',
     unsafe_allow_html=True
@@ -270,6 +471,7 @@ st.markdown(
 left, right = st.columns(2)
 
 with left:
+
     color = st.text_input(
         "▣ 좋아하는 색",
         placeholder="예: 네온 핑크, 검정, 하늘색",
@@ -283,6 +485,7 @@ with left:
     )
 
 with right:
+
     genre = st.selectbox(
         "▣ 세계관 / 장르",
         ["판타지", "로맨스", "액션", "스릴러"],
@@ -305,9 +508,14 @@ with right:
 
 
 # ── SECRET HORROR GAME ──
-# 검정 + 긴 머리 + 스릴러를 선택하면 게임 실행
 
-dark_color_words = ["검정", "검은색", "검은", "블랙", "black"]
+dark_color_words = [
+    "검정",
+    "검은색",
+    "검은",
+    "블랙",
+    "black"
+]
 
 is_black = any(
     word in color.strip().lower()
@@ -332,11 +540,13 @@ if launch_horror:
     </div>
     """, unsafe_allow_html=True)
 
-    game_path = Path(__file__).parent / "the_last_hallway.html"
+    game_path = BASE_DIR / "the_last_hallway.html"
 
     if game_path.exists():
 
-        game_html = game_path.read_text(encoding="utf-8")
+        game_html = game_path.read_text(
+            encoding="utf-8"
+        )
 
         components.html(
             game_html,
@@ -345,17 +555,49 @@ if launch_horror:
         )
 
     else:
+
         st.error(
             "게임 파일을 찾을 수 없어! "
             "the_last_hallway.html 파일을 이 파이썬 파일과 같은 폴더에 넣어 줘."
         )
 
-    # 아래의 일반 캐릭터 생성 코드는 실행하지 않음
     st.stop()
 
 
 # ── CHARACTER GENERATOR ──
+
 def generate_character(color, hair, genre):
+
+    selected_parts = {}
+
+    # 8개 파츠 각각 랜덤 선택
+    for category in PART_ORDER:
+
+        selected_parts[category] = select_random_part(
+            category,
+            color,
+            hair
+        )
+
+    # 이미지 합성
+    character_image = combine_character(
+        selected_parts
+    )
+
+    # PNG 데이터 생성
+    image_bytes = None
+
+    if character_image is not None:
+
+        buffer = io.BytesIO()
+
+        character_image.save(
+            buffer,
+            format="PNG"
+        )
+
+        image_bytes = buffer.getvalue()
+
     return {
         "name": random.choice(names),
         "gender": random.choice(["남성", "여성"]),
@@ -367,21 +609,28 @@ def generate_character(color, hair, genre):
             ["F급", "C급", "B급", "A급", "S급", "SS급"],
             weights=[35, 25, 18, 12, 7, 3],
             k=1
-        )[0]
+        )[0],
+        "selected_parts": selected_parts,
+        "character_image": image_bytes
     }
 
 
 # ── GENERATE ──
+
 if st.button(
     "⚔ 모험가 소환하기 / SUMMON CHARACTER",
     use_container_width=True
 ):
+
     st.session_state["character_result"] = generate_character(
-        color, hair, genre
+        color,
+        hair,
+        genre
     )
 
 
 # ── RESULT ──
+
 result = st.session_state.get("character_result")
 
 required_keys = [
@@ -390,15 +639,47 @@ required_keys = [
 ]
 
 # 이전 버전 데이터 호환
-if result and not all(key in result for key in required_keys):
+if result and not all(
+    key in result for key in required_keys
+):
+
     del st.session_state["character_result"]
     result = None
 
+
 if result:
+
     st.markdown(
         '<div class="section-label">02 / ADVENTURER REGISTERED</div>',
         unsafe_allow_html=True
     )
+
+    # ── CHARACTER IMAGE ──
+
+    if result.get("character_image"):
+
+        st.image(
+            result["character_image"],
+            caption="★ SUMMONED ADVENTURER ★",
+            width=400
+        )
+
+        st.download_button(
+            "⬇ 캐릭터 이미지 저장하기",
+            data=result["character_image"],
+            file_name="my_character.png",
+            mime="image/png",
+            use_container_width=True
+        )
+
+    else:
+
+        st.warning(
+            "캐릭터 이미지를 만들 수 없어! "
+            "assets 폴더와 PNG 파일을 확인해 줘."
+        )
+
+    # ── CHARACTER INFORMATION ──
 
     st.markdown(f"""
     <div class="result-card">
@@ -413,6 +694,28 @@ if result:
     </div>
     """, unsafe_allow_html=True)
 
+    # ── SELECTED PARTS ──
+
+    with st.expander("이번 캐릭터에 사용된 파츠 확인"):
+
+        for category in PART_ORDER:
+
+            path = result["selected_parts"].get(category)
+
+            if path:
+
+                st.write(
+                    f"**{PART_NAMES[category]}:** "
+                    f"{Path(path).name}"
+                )
+
+            else:
+
+                st.write(
+                    f"**{PART_NAMES[category]}:** "
+                    "이미지 없음"
+                )
+
     st.markdown("""
     <div class="parchment">
     <span class="quest-tag">CHARACTER FILE</span>
@@ -422,17 +725,24 @@ if result:
     </div>
     """, unsafe_allow_html=True)
 
+    # ── RANDOMIZE ──
+
     if st.button(
         "↻ 다른 모험가 소환하기 / RANDOMIZE",
         use_container_width=True
     ):
+
         st.session_state["character_result"] = generate_character(
-            color, hair, genre
+            color,
+            hair,
+            genre
         )
+
         st.rerun()
 
 
 # ── FOOTER ──
+
 st.markdown("""
 <div class="footer-note">
 ✦ MAY YOUR JOURNEY BE FILLED WITH ADVENTURE ✦
