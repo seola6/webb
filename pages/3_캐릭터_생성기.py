@@ -6,6 +6,7 @@ import io
 import streamlit.components.v1 as components
 
 from pathlib import Path
+from zipfile import ZipFile, BadZipFile
 from PIL import Image
 
 
@@ -19,7 +20,7 @@ st.set_page_config(
 # ── IMAGE PART SETTINGS ──
 
 BASE_DIR = Path(__file__).parent
-ASSET_DIR = BASE_DIR / "assets"
+ASSET_DIR = BASE_DIR.parent / "images"
 
 # 앞쪽에서 뒤쪽 순서
 PART_ORDER = [
@@ -35,6 +36,17 @@ PART_ORDER = [
 
 # 실제 이미지 합성 순서: 뒤쪽부터 앞쪽으로
 COMPOSITE_ORDER = list(reversed(PART_ORDER))
+
+PART_FOLDER_ALIASES = {
+    "item": ["item", "items"],
+    "decoration": ["decoration", "decorations"],
+    "expression": ["expression", "expressions"],
+    "clothes": ["clothes", "cloth", "outfit"],
+    "front_hair": ["front_hair", "front-hair", "front hair", "앞머리"],
+    "body_eyes": ["body_eyes", "body-eyes", "body eyes", "character", "eye_color", "eye-colour", "눈몸"],
+    "back_hair": ["back_hair", "back-hair", "back hair", "뒷머리"],
+    "skin": ["skin", "skintone", "skin_color", "skin-colour", "피부색"]
+}
 
 PART_NAMES = {
     "item": "아이템",
@@ -111,14 +123,137 @@ def filename_has_hair_length(filename, hair):
 # ── LOAD PART IMAGES ──
 
 def get_part_files(category):
+    """images 폴더 안의 일반 PNG와 ZIP 안의 PNG를 모두 찾는다."""
 
-    folder = ASSET_DIR / category
+    found = []
 
-    if not folder.exists():
-        return []
+    if not ASSET_DIR.exists():
+        return found
+
+    aliases = [
+        alias.lower()
+        for alias in PART_FOLDER_ALIASES.get(category, [category])
+    ]
+
+    def belongs_to_category(path_parts, filename=""):
+        lowered_parts = [
+            str(part).lower() for part in path_parts
+        ]
+
+        lowered_name = str(filename).lower()
+
+        return (
+            any(alias in lowered_parts for alias in aliases)
+            or any(
+                lowered_name.startswith(alias + "_")
+                or lowered_name.startswith(alias + ".")
+                for alias in aliases
+            )
+        )
+
+    # 1. 압축이 풀린 PNG 파일도 지원
+    for alias in aliases:
+
+        category_folder = ASSET_DIR / alias
+
+        if category_folder.exists() and category_folder.is_dir():
+
+            for path in category_folder.rglob("*"):
+
+                if path.is_file() and path.suffix.lower() == ".png":
+
+                    try:
+                        found.append({
+                            "name": path.name,
+                            "data": path.read_bytes(),
+                            "source": str(path)
+                        })
+
+                    except OSError:
+                        pass
+
+    # 2. images 폴더 바로 아래의 PNG도 지원
+    for path in ASSET_DIR.glob("*.png"):
+
+        if belongs_to_category([], path.name):
+
+            try:
+                found.append({
+                    "name": path.name,
+                    "data": path.read_bytes(),
+                    "source": str(path)
+                })
+
+            except OSError:
+                pass
+
+    # 3. ZIP 안에 들어 있는 PNG 검색
+    for zip_path in ASSET_DIR.rglob("*.zip"):
+
+        try:
+
+            with ZipFile(zip_path, "r") as archive:
+
+                for member in archive.namelist():
+
+                    member_path = Path(member)
+
+                    if member.endswith("/") or member_path.suffix.lower() != ".png":
+                        continue
+
+                    path_parts = [
+                        part.lower()
+                        for part in member_path.parts
+                    ]
+
+                    archive_name = zip_path.name.lower()
+
+                    try:
+                        zip_parent_parts = [
+                            part.lower()
+                            for part in zip_path.relative_to(ASSET_DIR).parts[:-1]
+                        ]
+
+                    except ValueError:
+                        zip_parent_parts = []
+
+                    category_match = (
+                        belongs_to_category(path_parts, member_path.name)
+                        or belongs_to_category(zip_parent_parts, archive_name)
+                    )
+
+                    if not category_match:
+                        continue
+
+                    try:
+
+                        image_data = archive.read(member)
+
+                        # 실제 이미지인지 확인
+                        with Image.open(io.BytesIO(image_data)) as test_image:
+                            test_image.verify()
+
+                        found.append({
+                            "name": member_path.name,
+                            "data": image_data,
+                            "source": f"{zip_path.name} / {member}"
+                        })
+
+                    except Exception:
+                        pass
+
+        except (BadZipFile, OSError):
+            continue
+
+    # 중복 검색 제거
+    unique = {}
+
+    for item in found:
+        unique[(item["source"], item["name"])] = item
 
     return sorted(
-        folder.glob("*.png")
+        unique.values(),
+        key=lambda item: item["name"].lower()
     )
 
 
@@ -147,8 +282,8 @@ def select_random_part(category, color, hair):
     if category in color_categories and color_group:
 
         matching = [
-            path for path in candidates
-            if filename_has_color(path.name, color_group)
+            item for item in candidates
+            if filename_has_color(item["name"], color_group)
         ]
 
         if matching:
@@ -158,8 +293,8 @@ def select_random_part(category, color, hair):
     if category in ["front_hair", "back_hair"]:
 
         matching = [
-            path for path in candidates
-            if filename_has_hair_length(path.name, hair)
+            item for item in candidates
+            if filename_has_hair_length(item["name"], hair)
         ]
 
         if matching:
@@ -176,13 +311,18 @@ def combine_character(parts):
 
     for category in COMPOSITE_ORDER:
 
-        path = parts.get(category)
+        part = parts.get(category)
 
-        if path is None:
+        if part is None:
             continue
 
-        with Image.open(path) as source:
-            layer = source.convert("RGBA")
+        try:
+
+            with Image.open(io.BytesIO(part["data"])) as source:
+                layer = source.convert("RGBA")
+
+        except Exception:
+            continue
 
         if character is None:
 
@@ -676,7 +816,7 @@ if result:
 
         st.warning(
             "캐릭터 이미지를 만들 수 없어! "
-            "assets 폴더와 PNG 파일을 확인해 줘."
+            "images 폴더와 ZIP 안의 PNG 파일을 확인해 줘."
         )
 
     # ── CHARACTER INFORMATION ──
@@ -706,7 +846,7 @@ if result:
 
                 st.write(
                     f"**{PART_NAMES[category]}:** "
-                    f"{Path(path).name}"
+                    f"{path['name']}"
                 )
 
             else:
